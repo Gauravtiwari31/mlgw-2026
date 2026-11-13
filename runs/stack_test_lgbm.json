@@ -1,0 +1,29 @@
+{
+  "run_id": "stack_test_lgbm",
+  "model": "lgbm",
+  "inputs": [
+    "L1_lgbm_base1_s0",
+    "L1_lgbm_base1abc1_s0"
+  ],
+  "commit": "4096bd8",
+  "input_sep_macro_f1": {
+    "L1_lgbm_base1_s0": 0.3850856442201256,
+    "L1_lgbm_base1abc1_s0": 0.42222449682756275
+  },
+  "sep_macro_f1": 0.4136263811025634,
+  "sep_f1": {
+    "legit": 0.986678607185442,
+    "mule_account": 0.3569682151589242,
+    "velocity_bot": 0.4834987925945801,
+    "layering_chain": 0.4822441062369442,
+    "sim_swap": 0.3292273236282195,
+    "account_takeover": 0.31590656284760843,
+    "phishing_collect": 0.42153846153846153,
+    "qr_swap": 0.479203280609256,
+    "refund_abuse": 0.37922077922077924,
+    "fake_cashback": 0.11146161934805468,
+    "loan_app_extortion": 0.35653235653235654,
+    "merchant_collusion": 0.26103646833013433
+  },
+  "minutes": 0.5
+}

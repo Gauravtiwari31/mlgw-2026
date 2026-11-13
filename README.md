@@ -44,7 +44,16 @@ python -m src.postprocess --run L1_lgbm_base1_s0
 
 - `--mode sep` gives only the honest score (train Jul+Aug, validate Sep). Use it while iterating.
 - Without it you also get `oof/<run_id>.parquet`, `preds/<run_id>.parquet` and `runs/<run_id>.json`.
-- `src.postprocess` fits the class weights for macro-F1 and writes `submissions/<run_id>.csv`.
+- `src.postprocess` calibrates the probabilities, fits the class weights for macro-F1 and writes `submissions/<run_id>.csv` plus a `.json` with every fitted parameter. Options: `--fraud-boost 1.3` multiplies all fraud classes (set only with a leaderboard probe); `--prior em` applies the EM prior shift (tested, no gain on Sep, off by default).
+
+## Stack several runs
+
+```
+python -m src.stack --name v1 --runs RUN_A RUN_B RUN_C
+python -m src.postprocess --run stack_v1
+```
+
+Default model is logistic regression on the log-probabilities (`--model lgbm` and `--model mean` also exist). Month-fold CV keeps the Sep score honest. Compare stacks with inputs only after `src.postprocess`, never on plain argmax.
 
 Commit your `runs/<run_id>.json` and your config. Sync `features/`, `oof/` and `preds/` through the shared bucket.
 
@@ -79,7 +88,8 @@ src/metric.py         macro-F1 and the per-class table
 src/base_features.py  single-row features (group base_v1)
 src/windows.py        shared window library with the density rule
 src/train.py          config-driven LightGBM trainer
-src/postprocess.py    weighted argmax, submission writer
+src/postprocess.py    calibration, weighted argmax, EM prior shift, fraud boost, submission writer
+src/stack.py          month-fold stacker over many runs
 configs/              one YAML per run
 runs/                 one JSON per run (committed)
 work/                 per-machine task files
