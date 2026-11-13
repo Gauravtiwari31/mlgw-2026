@@ -20,29 +20,33 @@ from pathlib import Path
 import polars as pl
 
 ROOT = Path(__file__).resolve().parents[1]
-TARGET = "1113-1912__L2_lgbm4-xgb1_blend5.csv"        # best public upload, 0.5014
+TARGET = "1113-2140__L2_blend8_beh3.csv"             # best public upload, 0.5019
+NAME = "REPRO_blend8_beh3"
 RUNS = ["L2_lgbm_fw-clean_b1-f1-beh12_s0", "L2_lgbm_fw-clean_b1-f1-beh12_s1", "L2_lgbm_fw-clean_b1-f1-beh12_s2",
         "L2_lgbm_fw1-clean_b1-f1-beh12_s3"]
-XGB = ("configs/L2_lgbm_fw-clean_b1-f1-beh12_s0.yaml", "L2_xgb_fw-clean_b1-f1-beh12_s0")
+XGB = [("configs/L2_lgbm_fw-clean_b1-f1-beh12_s0.yaml", "L2_xgb_fw-clean_b1-f1-beh12_s0", 0),
+       *[("configs/L2_lgbm_fw-clean_b1-f1-beh123-lh2_s0.yaml", f"L2_xgb_fw-clean_b1-f1-beh123-lh2_s{s}", s) for s in (0, 1, 2)]]
 STEPS = [
     ["-m", "src.folds"],
     ["-m", "src.base_features"],
     ["-m", "src.labels_clean", "--from-changes"],
     *[["-m", f"src.{m}", "--view", v] for v in ("fw_s0", "fw_s1") for m in ("flow_features", "behaviour_features", "behaviour2_features")],
+    ["-m", "src.behaviour3_features", "--view", "fw_s0"],
+    ["-m", "src.labelhist_features", "--labels", "clean"],
     *[["-m", "src.train", "--config", f"configs/{r}.yaml"] for r in RUNS],
-    ["-m", "src.train_xgb", "--config", XGB[0], "--run-id", XGB[1]],
-    ["-m", "src.blend", "--name", "REPRO_lgbm4-xgb1_blend5", "--runs", *RUNS, XGB[1]],
+    *[["-m", "src.train_xgb", "--config", c, "--run-id", r, "--seed", str(s)] for c, r, s in XGB],
+    ["-m", "src.blend", "--name", NAME, "--runs", *RUNS, *[r for _, r, _ in XGB]],
 ]
 
 
 def compare() -> str:
-    new = sorted(glob.glob(str(ROOT / "submissions" / "*REPRO_lgbm4-xgb1_blend5.csv")))
+    new = sorted(glob.glob(str(ROOT / "submissions" / f"*{NAME}.csv")))
     if not new:
         return "no reproduced file found"
     a, b = pl.read_csv(new[-1]), pl.read_csv(ROOT / "submissions" / TARGET)
     j = a.join(b, on="id", suffix="_up")
     diff = j.filter(pl.col("label") != pl.col("label_up"))
-    lines = [f"reproduced: {Path(new[-1]).name}", f"uploaded:   {TARGET} (public 0.5014)",
+    lines = [f"reproduced: {Path(new[-1]).name}", f"uploaded:   {TARGET}",
              f"rows: {a.height} vs {b.height}; same ids: {set(a['id']) == set(b['id'])}", f"rows with a different label: {diff.height}"]
     if diff.height:
         lines.append("differences (uploaded -> reproduced): " + ", ".join(f"{x} -> {y}: {n}" for x, y, n in
