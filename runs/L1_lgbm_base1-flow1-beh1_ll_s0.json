@@ -1,0 +1,31 @@
+{
+  "run_id": "L1_lgbm_base1-flow1-beh1_ll_s0",
+  "config": "configs/L1_lgbm_base1-flow1-beh1_ll_s0.yaml",
+  "commit": "3aa518b",
+  "features": [
+    "base_v1",
+    "flow_v1",
+    "behaviour_v1"
+  ],
+  "view": "half_s0",
+  "seed": 0,
+  "best_rounds": 60,
+  "sep_macro_f1": 0.4457485593315866,
+  "sep_f1": {
+    "legit": 0.9865975385699545,
+    "mule_account": 0.37915936952714535,
+    "velocity_bot": 0.4836461126005362,
+    "layering_chain": 0.5029868578255675,
+    "sim_swap": 0.35501653803748623,
+    "account_takeover": 0.32390460343871325,
+    "phishing_collect": 0.4135429262394196,
+    "qr_swap": 0.47204610951008646,
+    "refund_abuse": 0.4360613810741688,
+    "fake_cashback": 0.26273458445040215,
+    "loan_app_extortion": 0.3764705882352941,
+    "merchant_collusion": 0.35681610247026535
+  },
+  "n_features": 285,
+  "oof_macro_f1": 0.44389398790907814,
+  "minutes": 5.6
+}
