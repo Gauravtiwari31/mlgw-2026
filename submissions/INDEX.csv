@@ -8,4 +8,5 @@ file,written,run,sep_macro_f1_honest,fraud_boost,prior,predicted_fraud_share,sha
 1113-1324__L1_lgbm_base1-flow1-beh12_reg_s0.csv,2026-11-13T13:24:25,L1_lgbm_base1-flow1-beh12_reg_s0,0.44836529130616687,1.0,none,0.01502022396021214,ae7759fff6dc24ee,"",""
 1113-1351__L1_lgbm_base1-flow1-beh12_reg_noip_s0__clean.csv,2026-11-13T13:51:39,L1_lgbm_base1-flow1-beh12_reg_noip_s0,0.8033718405294734,1.0,none,0.014448426982677239,b1f05c9311dc2b8c,"",""
 1113-1401__L2_lgbm_fw-clean_b1-f1-beh12_s0__clean.csv,2026-11-13T14:01:01,L2_lgbm_fw-clean_b1-f1-beh12_s0,0.9005403807415258,1.0,none,0.014344812765271584,787b5a7e91adee28,"",""
-1113-1414__L2_fwclean_blend4.csv,2026-11-13T14:14:58,L2_fwclean_blend4,0.8985528944566358,1.0,none,0.01461344221780476,66975b6e9053587e,"",""
+1113-1414__L2_fwclean_blend4.csv,2026-11-13T14:14:58,L2_fwclean_blend4,0.8985528944566358,1.0,none,0.01461344221780476,66975b6e9053587e,2026-11-13,0.4987
+1113-1729__PROBE_only_qr_swap.csv,2026-11-13T17:29:04,PROBE_only_qr_swap,NaN,1.0,none,0.0018957564221626973,dac79bdb655f91a7,"",""
