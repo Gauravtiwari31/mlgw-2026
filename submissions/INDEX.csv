@@ -1,4 +1,4 @@
-﻿file,written,run,sep_macro_f1_honest,fraud_boost,prior,predicted_fraud_share,sha256,uploaded,public_score
+file,written,run,sep_macro_f1_honest,fraud_boost,prior,predicted_fraud_share,sha256,uploaded,public_score
 1113-1201__L1_lgbm_base1_s0.csv,2026-11-13T12:01:00,L1_lgbm_base1_s0,0.397810892971907,1.0,none,0.014812995525400833,f4173e79ef81dea3,"",""
 1113-1221__L1_lgbm_base1_s0__v1_weights_only.csv,2026-11-13T12:21:19,L1_lgbm_base1_s0,0.3984,1.0,none,0.015215939304200597,7f67a8ef84c7b8cc,"",""
 1113-1230__L1_lgbm_base1-flow1_ll_s0.csv,2026-11-13T12:30:37,L1_lgbm_base1-flow1_ll_s0,0.43986900620252173,1.0,none,0.014797645270970366,37f72999d5aae12f,"",""
@@ -32,3 +32,4 @@
 1113-2119__L2_full_blend5.csv,2026-11-13T21:19:17,L2_full_blend5,0.9014275439579759,1.0,none,0.014521340691221957,61a88daf75d59246,"",""
 1113-2059__L3_nn_fw-clean_b1-f1-beh123-lh2_s0__clean.csv,2026-11-13T20:59:56,L3_nn_fw-clean_b1-f1-beh123-lh2_s0,0.8640567804055902,1.0,none,0.014387025964955369,86a849949ccfe1ba,"",""
 1113-2119__L3_catboost_fw-clean_b1-f1-beh123-lh2_s0__clean.csv,2026-11-13T21:19:00,L3_catboost_fw-clean_b1-f1-beh123-lh2_s0,0.9023807497019027,1.0,none,0.014340975201663967,fbe83066309173ee,"",""
+1113-2140__L2_blend8_beh3.csv,2026-11-13T21:40:40,L2_blend8_beh3,0.9047790548003354,1.0,none,0.01451750312761434,a8be1a5dac774f37,"",""

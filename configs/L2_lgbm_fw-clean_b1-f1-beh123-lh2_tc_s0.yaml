@@ -1,0 +1,19 @@
+# L3 feature set (beh3 + clean labelhist_v2) on the L2 recipe; used by the XGBoost GPU runs.
+# Corrected line, step 2: adds the behaviour groups (built by L1) in the fraud-whole view.
+run_id: L2_lgbm_fw-clean_b1-f1-beh123-lh2_tc_s0
+features: [base_v1, flow_v1, behaviour_v1, behaviour_v2, behaviour_v3, labelhist_v2]
+view: fw_s0
+seed: 0
+labels: clean
+drop_features: [ip_risk_rank, day_of_month, minute_of_day, merchant_age_days, sender_account_age_days, b2_rcv_payments_per_sender_30d]   # time-consistency screen
+legit_keep: 0.2
+class_weight_power: 0.5
+num_boost_round: 3000
+early_stopping: 150
+early_stop_metric: logloss
+params:
+  learning_rate: 0.03
+  num_leaves: 31
+  min_data_in_leaf: 100
+  feature_fraction: 0.5
+  lambda_l2: 5.0
