@@ -75,6 +75,23 @@ def _keys(key: str | list[str]) -> list[str]:
     return [key] if isinstance(key, str) else list(key)
 
 
+def _prepare(ev: pl.DataFrame, key: str | list[str]) -> tuple[pl.DataFrame, list[str]]:
+    """Drop rows with a null key and sort by ['vis', key, 'ts'].
+
+    A multi-column key is collapsed into one string column '_key', so every call groups by
+    ['vis', one key column'].
+    """
+    keys = _keys(key)
+    evs = ev.drop_nulls(keys)
+    if len(keys) > 1:
+        evs = evs.with_columns(
+            _key=pl.concat_str([pl.col(k).cast(pl.String) for k in keys], separator="\x1f")
+        )
+        keys = ["_key"]
+    by = ["vis", *keys]
+    return evs.sort([*by, "ts"]), by
+
+
 def window_agg(
     ev: pl.DataFrame,
     key: str | list[str],
@@ -92,9 +109,7 @@ def window_agg(
     Returns txn_id plus one column per aggregate, one row per original transaction.
     Rows whose key is null are left out; a left join back on txn_id gives them nulls.
     """
-    keys = _keys(key)
-    by = ["vis", *keys]
-    evs = ev.drop_nulls(keys).sort([*by, "ts"])
+    evs, by = _prepare(ev, key)
     if direction == "past":
         kw = dict(period=period, offset=-period, closed="left")
     elif direction == "future":
@@ -104,7 +119,12 @@ def window_agg(
     else:
         raise ValueError(direction)
     out = evs.rolling(index_column="ts", group_by=by, **kw).agg(aggs)
-    # The result must line up row for row with the sorted input (ties share the same window).
+    # Polars returns the groups in its own order (hash order for some keys, e.g. city names), not
+    # in the sorted input order. Re-sort the output the same way. Rows with the same key and the
+    # same timestamp have the same window, so their aggregates are identical and any order among
+    # them is correct.
+    out = out.sort(by + ["ts"], maintain_order=True)
+    # The result must now line up row for row with the sorted input.
     assert out.height == evs.height, "rolling changed the row count"
     assert out["ts"].equals(evs["ts"]), "rolling changed the row order"
     for k in by:
@@ -120,9 +140,7 @@ def window_agg(
 
 def gap_features(ev: pl.DataFrame, key: str | list[str], prefix: str) -> pl.DataFrame:
     """Seconds since the previous row and until the next row that share `key` (null if none)."""
-    keys = _keys(key)
-    by = ["vis", *keys]
-    evs = ev.drop_nulls(keys).sort([*by, "ts"])
+    evs, by = _prepare(ev, key)
     out = evs.with_columns(
         (pl.col("ts") - pl.col("ts").shift(1).over(by)).dt.total_seconds().alias(f"{prefix}_secs_since_prev"),
         (pl.col("ts").shift(-1).over(by) - pl.col("ts")).dt.total_seconds().alias(f"{prefix}_secs_to_next"),
