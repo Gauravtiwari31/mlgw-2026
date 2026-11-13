@@ -25,7 +25,7 @@ L2 is now building `labels_clean.parquet` and the corrected feature view. L1: `l
 |---|---|---|---|
 | L1 Goro | `labelhist_v1` (entity label history from other months; claimed from L4, the MacBook has not started) | seeds of the best config at lr 0.03 | Best: stack_v1 0.4476, single base + flow + beh1 0.4468 |
 | L2 RTX 4060 | Gap analysis done (`audit/gap_analysis.md`); next is `src/labels_clean.py` + the fraud-whole feature view, waiting for the go-ahead | corrected model and submission; `flow_v2` after that | Clean-label September: 0.789 (half view), 0.826 (full view) for base + flow_v1 without ip_risk_rank |
-| L3 RTX 3050 | M3 CatBoost on GPU as soon as data lands: `src/train_catboost.py` + `configs/L3_catboost_base1-flow1-beh1_s0.yaml` (base1-flow1-beh1, half_s0, ip_risk_rank dropped). Env ready (py 3.14, pinned reqs, CatBoost sees the 3050). Data files were missing on this laptop; fetching them now | M6 NN tonight (S5); behaviour_v3 (city distance, ATO travel speed) | setup done; no runs yet |
+| L3 RTX 3050 | M3 done s0: CatBoost GPU on base1-flow1-beh1 (half_s0, noip, legit_keep 0.2, 6000 rounds): Sep 0.4329 argmax / 0.4361 after postprocess (LGBM twin: 0.4468 — different family for the stack). oof/preds + submission 1113-1800__L3_catboost_base1-flow1-beh1_s0.csv (sha 420f339d6ebe7f4e) are on this laptop; no S3 access from here, so tell me where to send the parquet files. Now building behaviour_v3 (city distance, ATO travel speed) | M6 NN tonight (S5); CatBoost on labels_clean + full view once they land | M3 CatBoost s0: Sep 0.4361 post |
 | L4 MacBook | Not started | | |
 
 ## Claimed feature groups (claim here before you build one)
