@@ -1,0 +1,17 @@
+# L3 NN A/B on the corrected line: identical to beh123-lh2 s0 minus behaviour_v3
+run_id: L3_nn_fw-clean_b1-f1-beh12-lh2_s0
+features: [base_v1, flow_v1, behaviour_v1, behaviour_v2, labelhist_v2]
+view: fw_s0
+seed: 0
+labels: clean
+drop_features: [ip_risk_rank]
+legit_keep: 0.2
+class_weight_power: 0.5
+lr: 0.001
+weight_decay: 0.00001
+batch: 4096
+epochs: 40
+patience: 5
+nn:
+  hidden: [512, 256]
+  dropout: 0.2
