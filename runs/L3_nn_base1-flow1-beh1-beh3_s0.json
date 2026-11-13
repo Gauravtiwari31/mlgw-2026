@@ -1,0 +1,33 @@
+{
+  "run_id": "L3_nn_base1-flow1-beh1-beh3_s0",
+  "config": "configs/L3_nn_base1-flow1-beh1-beh3_s0.yaml",
+  "commit": "a35dbcb",
+  "model": "mlp",
+  "features": [
+    "base_v1",
+    "flow_v1",
+    "behaviour_v1",
+    "behaviour_v3"
+  ],
+  "view": "half_s0",
+  "seed": 0,
+  "best_rounds": 12,
+  "sep_macro_f1": 0.4341450685313153,
+  "sep_f1": {
+    "legit": 0.9862948041891924,
+    "mule_account": 0.34744652989960717,
+    "velocity_bot": 0.4841653247450349,
+    "layering_chain": 0.4612634088200238,
+    "sim_swap": 0.35490830636461707,
+    "account_takeover": 0.32408917890157696,
+    "phishing_collect": 0.3913803145020384,
+    "qr_swap": 0.4570426651081239,
+    "refund_abuse": 0.42346938775510207,
+    "fake_cashback": 0.26229508196721313,
+    "loan_app_extortion": 0.37657864523536166,
+    "merchant_collusion": 0.34080717488789236
+  },
+  "n_features": 296,
+  "oof_macro_f1": 0.42893790082925554,
+  "minutes": 1.6
+}

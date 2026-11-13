@@ -1,4 +1,4 @@
-﻿# STATUS: live board (every machine updates its own row)
+# STATUS: live board (every machine updates its own row)
 
 Edit your own row when you start or finish something, then commit and push right away. Pull before you start a new task, so two machines never build the same thing.
 
@@ -49,7 +49,7 @@ L2 is now building `labels_clean.parquet` and the corrected feature view. L1: `l
 |---|---|---|---|
 | L1 Goro | `labelhist_v1` (entity label history from other months; claimed from L4, the MacBook has not started) | seeds of the best config at lr 0.03 | Best: stack_v1 0.4476, single base + flow + beh1 0.4468 |
 | L2 RTX 4060 | Full-density 5-model blend training (21:00); CatBoost from L3's trainer next | 10 PM / 11:50 PM uploads | **Best public 0.5014**: `submissions/1113-1912__L2_lgbm4-xgb1_blend5.csv` |
-| L3 RTX 3050 (Tushar) | As of 14:07: M3 CatBoost on GPU: `src/train_catboost.py` + `configs/L3_catboost_base1-flow1-beh1_s0.yaml` (merged into main 21:00 by L2) | M6 NN; behaviour_v3 (city distance, ATO travel speed) | setup done; no runs logged yet |
+| L3 RTX 3050 | Corrected line live: CatBoost beh123-lh2 s0 clean Sep 0.9016 argmax / 0.9024 post (14 min/run; config pushed, rerun locally for blends). NN beh123-lh2 s0: 0.8538/0.8641. LGBM beh123-lh2 s0: OOF 0.8964 (6 min/run). Running now: CatBoost A/B without beh3 (GPU), LGBM s1/s2 + A/B (CPU), CatBoost seeds s1/s2 + depth-10 after that, NN seeds behind those | A/B verdict on behaviour_v3 + seed-averaged runs by morning | best: CatBoost beh123-lh2 s0 0.9024 post |
 | L4 MacBook | Not started | | |
 
 ## Claimed feature groups (claim here before you build one)

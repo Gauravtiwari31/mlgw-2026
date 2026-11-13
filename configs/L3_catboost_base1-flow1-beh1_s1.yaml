@@ -1,0 +1,19 @@
+# M3 (L3 TASKS.md #7): CatBoost multiclass on GPU, same features as L1_lgbm_base1-flow1-beh1_ll_s0
+# ip_risk_rank dropped (STATUS.md 13:40: dead in October). VRAM out -> lower border_count, then task_type: CPU.
+run_id: L3_catboost_base1-flow1-beh1_s1
+features: [base_v1, flow_v1, behaviour_v1]
+view: half_s0
+seed: 1
+labels: raw
+class_weight_power: 0.5
+legit_keep: 0.2
+drop_features: [ip_risk_rank]
+num_boost_round: 6000
+early_stopping: 100
+params:
+  learning_rate: 0.05
+  depth: 8
+  border_count: 128
+  l2_leaf_reg: 3.0
+  task_type: GPU
+  devices: "0"

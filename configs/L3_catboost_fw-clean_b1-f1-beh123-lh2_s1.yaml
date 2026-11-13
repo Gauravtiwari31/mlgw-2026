@@ -1,0 +1,18 @@
+# CatBoost corrected line, seed 1 (seed average for the blend)
+run_id: L3_catboost_fw-clean_b1-f1-beh123-lh2_s1
+features: [base_v1, flow_v1, behaviour_v1, behaviour_v2, behaviour_v3, labelhist_v2]
+view: fw_s0
+seed: 1
+labels: clean
+drop_features: [ip_risk_rank]
+legit_keep: 0.2
+class_weight_power: 0.5
+num_boost_round: 4000
+early_stopping: 100
+params:
+  learning_rate: 0.05
+  depth: 8
+  border_count: 128
+  l2_leaf_reg: 3.0
+  task_type: GPU
+  devices: "0"
