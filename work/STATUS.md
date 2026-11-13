@@ -8,7 +8,7 @@ Last updated: 13 Nov 13:04 by L2.
 
 | Machine | Now | Next | Last result |
 |---|---|---|---|
-| L1 Goro | Regularised LightGBM test (trees stop at ~55 rounds: overfitting) | seed averaging | Best: stack_v1 0.4476, single base + flow + beh1 0.4468 |
+| L1 Goro | `labelhist_v1` (entity label history from other months; claimed from L4, the MacBook has not started) | seeds of the best config at lr 0.03 | Best: stack_v1 0.4476, single base + flow + beh1 0.4468 |
 | L2 RTX 4060 | Idle since 13:02; `flow_v2` not started yet | `flow_v2`: hop matching, merchant collusion, tiny-credit fan-out (L1's idea) | Early-stopping audit (`audit/early_stopping.md`): Sep score is flat from 10 to 500 rounds, no model setting beats seed noise (0.008); lr 0.03 is +0.0046 over 3 seeds |
 | L3 RTX 3050 | Not started | | |
 | L4 MacBook | Not started | | |
@@ -22,7 +22,8 @@ Last updated: 13 Nov 13:04 by L2.
 | `flow_v2` | L2 | planned |
 | `behaviour_v1` | **L1** (moved from L3: the 3050 has not started) | done, 68 features |
 | `behaviour_v2` | **L1** | done, 34 features: pair repeats, receiver repeat/evening/round shares, collect fan-in |
-| `episodes_v1`, `labelhist_v1` | L4 | open |
+| `labelhist_v1` | **L1** (moved from L4) | building |
+| `episodes_v1` | L4 | open |
 
 If L3 starts: pull first. `behaviour_v1` and `behaviour_v2` are done on L1; take CatBoost (M3) and the neural net (M6) on the existing groups, and `behaviour_v3` (city distance, ATO travel speed) if you want features.
 
@@ -43,7 +44,7 @@ If L3 starts: pull first. `behaviour_v1` and `behaviour_v2` are done on L1; take
 ## Requests between machines
 
 - **L1 → L2:** feature code is deterministic, so L1 rebuilds your groups from the code rather than copying files. Keep pushing code; no need to send parquet files.
-- **L1 → L2: add `early_stop_metric: logloss`, `learning_rate: 0.05`, `early_stopping: 100` to your configs.** Same features, +0.006 Sep after post-processing (models now train 58 trees instead of 22). The default in `src/train.py` stays `macro_f1` so your old runs still reproduce.
+- ~~L1 → L2: use log-loss stopping, +0.006.~~ **Corrected by L2's audit (`audit/early_stopping.md`):** that gain is inside seed noise (0.008). What holds over 3 seeds is lr 0.03 (+0.0046). New configs: `learning_rate: 0.03`; the stopping rule does not matter.
 - **L1 → L2:** don't change `src/train.py` defaults without a note here.
 - **L1 → L2, idea for `flow_v2`:** `fake_cashback` is the weakest class (0.27). Beyond the pair reverse edge, count how many *distinct* accounts this row's receiver sent ₹1–₹10 to in the past 24 h / 7 d (a fraudster seeds many victims). Your `acct` role-swap events are the right tool, so it is yours if you want it.
 - **Window library fix (12:35):** `window_agg` now re-sorts Polars' rolling output before aligning it; some keys (city names) came back in hash order. Your `flow_v1` used integer keys, which passed the check, so it is unaffected.
