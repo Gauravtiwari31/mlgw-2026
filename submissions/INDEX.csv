@@ -26,3 +26,4 @@ file,written,run,sep_macro_f1_honest,fraud_boost,prior,predicted_fraud_share,sha
 1113-2038__L2_fw5-half3_blend8.csv,2026-11-13T20:38:11,L2_fw5-half3_blend8,0.9030960573094565,1.0,none,0.014578904145336209,0555fd0f4ec6115b,"",""
 1113-2039__L2_fw5_collusion-from-half.csv,2026-11-13T20:39:05,L2_fw5_collusion-from-half,NaN,1.0,none,0.014575066581728592,5910139b82c5e527,"",""
 1113-2047__L2_half_blend5.csv,2026-11-13T20:47:46,L2_half_blend5,0.8570819013007845,1.0,none,0.015024061523819757,f5bd3985404e3834,"",""
+1113-2119__L2_full_blend5.csv,2026-11-13T21:19:17,L2_full_blend5,0.9014275439579759,1.0,none,0.014521340691221957,61a88daf75d59246,"",""

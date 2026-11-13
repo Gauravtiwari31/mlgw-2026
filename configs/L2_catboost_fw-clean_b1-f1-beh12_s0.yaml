@@ -1,0 +1,19 @@
+# CatBoost (L3's trainer, src/train_catboost.py) on the 0.5014 line: fw_s0 view, clean labels, all four groups.
+run_id: L2_catboost_fw-clean_b1-f1-beh12_s0
+features: [base_v1, flow_v1, behaviour_v1, behaviour_v2]
+view: fw_s0
+seed: 0
+labels: clean
+drop_features: [ip_risk_rank]
+legit_keep: 0.2
+class_weight_power: 0.5
+num_boost_round: 3000
+early_stopping: 100
+params:
+  learning_rate: 0.06
+  depth: 8
+  border_count: 128
+  l2_leaf_reg: 3.0
+  task_type: GPU
+  devices: "0"
+  verbose: 500
