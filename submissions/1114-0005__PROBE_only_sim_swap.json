@@ -1,0 +1,12 @@
+{
+  "run": "PROBE_only_sim_swap",
+  "probe_of": "submissions/1113-2140__L2_blend8_beh3.csv",
+  "keep": [
+    "sim_swap"
+  ],
+  "predicted_fraud_share": 0.0010706802465250862,
+  "sep_macro_f1_honest": NaN,
+  "file": "1114-0005__PROBE_only_sim_swap.csv",
+  "sha256": "7bbbbf529898905d616c2bb2982829f2dbcdb458ef8b753793e88771cb095581",
+  "written": "2026-11-14T00:05:08"
+}

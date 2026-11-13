@@ -1,0 +1,12 @@
+{
+  "run": "PROBE_only_phishing_collect",
+  "probe_of": "submissions/1113-2140__L2_blend8_beh3.csv",
+  "keep": [
+    "phishing_collect"
+  ],
+  "predicted_fraud_share": 0.002095309729758771,
+  "sep_macro_f1_honest": NaN,
+  "file": "1114-0005__PROBE_only_phishing_collect.csv",
+  "sha256": "619e0d86702e12362ce4389aa1c452c384f7e48254f1ccadac7fe148f7901474",
+  "written": "2026-11-14T00:05:21"
+}

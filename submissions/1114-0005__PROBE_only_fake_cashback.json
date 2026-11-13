@@ -1,0 +1,12 @@
+{
+  "run": "PROBE_only_fake_cashback",
+  "probe_of": "submissions/1113-2140__L2_blend8_beh3.csv",
+  "keep": [
+    "fake_cashback"
+  ],
+  "predicted_fraud_share": 0.0006255228680415378,
+  "sep_macro_f1_honest": NaN,
+  "file": "1114-0005__PROBE_only_fake_cashback.csv",
+  "sha256": "8f013100655d41246d926e14e136565515181326b2cc6e4d2503bfafe08f437e",
+  "written": "2026-11-14T00:05:17"
+}

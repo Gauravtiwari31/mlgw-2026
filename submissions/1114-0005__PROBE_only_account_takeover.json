@@ -1,0 +1,12 @@
+{
+  "run": "PROBE_only_account_takeover",
+  "probe_of": "submissions/1113-2140__L2_blend8_beh3.csv",
+  "keep": [
+    "account_takeover"
+  ],
+  "predicted_fraud_share": 0.0011742944639307397,
+  "sep_macro_f1_honest": NaN,
+  "file": "1114-0005__PROBE_only_account_takeover.csv",
+  "sha256": "3e94f46c922897b989dd45cd9bc34b02e548f166fec646d730d538f1b4e785b9",
+  "written": "2026-11-14T00:05:13"
+}

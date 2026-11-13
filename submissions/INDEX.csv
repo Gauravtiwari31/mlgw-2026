@@ -37,3 +37,7 @@ file,written,run,sep_macro_f1_honest,fraud_boost,prior,predicted_fraud_share,sha
 1113-2237__L2_blend9_stage2.csv,2026-11-13T22:37:14,L2_blend9_stage2,0.906466965644514,1.0,none,0.01450599043679149,b1d8349a19ff662c,2026-11-13,0.5009
 1113-2315__L2_stack2_d3.csv,2026-11-13T23:15:33,stack2_d3,NaN,1.0,none,0.014862883852299853,f09116700d1eeeae,"",""
 1113-2338__L2_pairspec_p1.csv,2026-11-13T23:38:12,pairspec_p1,NaN,1.0,none,0.01450599043679149,a1f118223b054c77,"",""
+1114-0005__PROBE_only_sim_swap.csv,2026-11-14T00:05:08,PROBE_only_sim_swap,NaN,1.0,none,0.0010706802465250862,7bbbbf529898905d,"",""
+1114-0005__PROBE_only_account_takeover.csv,2026-11-14T00:05:13,PROBE_only_account_takeover,NaN,1.0,none,0.0011742944639307397,3e94f46c922897b9,"",""
+1114-0005__PROBE_only_fake_cashback.csv,2026-11-14T00:05:17,PROBE_only_fake_cashback,NaN,1.0,none,0.0006255228680415378,8f013100655d4124,"",""
+1114-0005__PROBE_only_phishing_collect.csv,2026-11-14T00:05:21,PROBE_only_phishing_collect,NaN,1.0,none,0.002095309729758771,619e0d86702e1236,"",""
