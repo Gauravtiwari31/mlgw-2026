@@ -1,0 +1,23 @@
+{
+  "run": "stack2_d3",
+  "families": [
+    "fw_lgbm",
+    "fw_xgb",
+    "beh3_xgb",
+    "tc_lgbm",
+    "tc_xgb",
+    "half",
+    "full",
+    "raw",
+    "nowt",
+    "typerule",
+    "catboost",
+    "stage2"
+  ],
+  "depth": 3,
+  "predicted_fraud_share": 0.014862883852299853,
+  "sep_macro_f1_honest": NaN,
+  "file": "1113-2315__L2_stack2_d3.csv",
+  "sha256": "f09116700d1eeeae412840f5dcd4038b3e6790f7c735dddf17cff825feca9b91",
+  "written": "2026-11-13T23:15:33"
+}

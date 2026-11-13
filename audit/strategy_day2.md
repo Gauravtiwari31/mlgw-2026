@@ -51,3 +51,17 @@ L2, 13 Nov ~19:30. Built on `strategy.md` section 2 (Amazon ML Challenge lessons
 
 4 left on 13 Nov, 10 on 14 Nov, 10 on 15 Nov before 10:00.
 Keep 2 for the final morning. Never upload without a simulated score next to it in `uploads_log.csv`.
+
+## 13 Nov night: the three Amazon-winner methods, tested (L2)
+
+All scored on Sep with test-like noise against the 0.5019 + stage-2 blend (0.5361):
+
+| Method (Amazon equivalent) | Test-like | Change |
+|---|---|---|
+| Stacker over 12 run families, XGBoost depth 3 (`src/stack2.py`) | 0.5332 | -0.003 |
+| Same, depth 5 | 0.5307 | -0.005 |
+| Pair specialists for 6 confused type pairs (cross-encoder idea, `src/pair_specialist.py`) | 0.5330 | -0.003 |
+| Sequence transformer over sender histories, 15 epochs (`src/seq_transformer.py`) blended at 0.1-0.3 | 0.5362-0.5365 | +0.000 |
+
+None is used. With near-identical strong inputs, a fitted stacker and specialists overfit the noisy training
+types; a plain average of strong models is the better final decision here.

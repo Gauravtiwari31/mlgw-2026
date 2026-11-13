@@ -1,0 +1,34 @@
+{
+  "run": "pairspec_p1",
+  "pairs": [
+    [
+      "sim_swap",
+      "account_takeover"
+    ],
+    [
+      "phishing_collect",
+      "fake_cashback"
+    ],
+    [
+      "mule_account",
+      "layering_chain"
+    ],
+    [
+      "velocity_bot",
+      "mule_account"
+    ],
+    [
+      "refund_abuse",
+      "merchant_collusion"
+    ],
+    [
+      "qr_swap",
+      "merchant_collusion"
+    ]
+  ],
+  "predicted_fraud_share": 0.01450599043679149,
+  "sep_macro_f1_honest": NaN,
+  "file": "1113-2338__L2_pairspec_p1.csv",
+  "sha256": "a1f118223b054c770aa205af5b30e7725a1cc43d3326041e3d7ede53578f9187",
+  "written": "2026-11-13T23:38:12"
+}
