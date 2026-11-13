@@ -14,3 +14,4 @@ file,written,run,sep_macro_f1_honest,fraud_boost,prior,predicted_fraud_share,sha
 1113-1746__PROBE_only_merchant_collusion.csv,2026-11-13T17:46:40,PROBE_only_merchant_collusion,NaN,1.0,none,0.0003223553430398109,69d738a19c18505d,2026-11-13,0.1039
 1113-1746__PROBE_only_mule_account.csv,2026-11-13T17:46:44,PROBE_only_mule_account,NaN,1.0,none,0.0028206092515983454,20c2a42e9e43fd66,2026-11-13,0.1235
 1113-1828__L2_fwt3_blend3.csv,2026-11-13T18:28:45,L2_fwt3_blend3,0.9674982930901925,1.0,none,0.014559716327298125,ccef07d1120031ee,2026-11-13,0.4738
+1113-1912__L2_lgbm4-xgb1_blend5.csv,2026-11-13T19:12:52,L2_lgbm4-xgb1_blend5,0.9021175006775879,1.0,none,0.014559716327298125,d9b490d0b4139da6,"",""
