@@ -1,0 +1,58 @@
+train block ids 423000..428454: 2240 phones, 3232 rows; fraud-labelled 0.884
+  rows whose label equals their zone, among fraud-labelled rows: 0.965
+  row classifier (cross-fitted): zone accuracy per row 0.523
+  label-free recovery in train: 0.985 of rows get their true zone
+shape: (11, 5)
++--------------------+------+------------+-----------+--------------+
+| zone               | rows | first_true | last_true | recovered_ok |
+| ---                | ---  | ---        | ---       | ---          |
+| str                | u32  | i64        | i64       | f64          |
++===================================================================+
+| mule_account       | 350  | 423000     | 423655    | 1.0          |
+| velocity_bot       | 175  | 423658     | 424152    | 0.789        |
+| layering_chain     | 213  | 424155     | 424624    | 1.0          |
+| sim_swap           | 570  | 424628     | 425032    | 0.996        |
+| account_takeover   | 1165 | 425039     | 426762    | 1.0          |
+| phishing_collect   | 226  | 426769     | 427164    | 1.0          |
+| qr_swap            | 230  | 427165     | 427846    | 0.983        |
+| refund_abuse       | 108  | 427848     | 428066    | 1.0          |
+| fake_cashback      | 74   | 428069     | 428199    | 0.919        |
+| loan_app_extortion | 51   | 428201     | 428301    | 0.98         |
+| merchant_collusion | 70   | 428304     | 428453    | 1.0          |
++--------------------+------+------------+-----------+--------------+
+
+simulation: 100 blocks of about 920 ids cut from the train block (classifier cross-fitted)
+  zone lengths vary like Poisson:
+    no length prior                      rows in the right zone: mean 0.947, worst 10% of blocks 0.902; by marginals 0.949   | per zone mule_ 0.98 veloc 0.73 layer 0.96 sim_s 0.91 accou 1.00 phish 0.99 qr_sw 0.97 refun 0.83 fake_ 0.92 loan_ 0.84 merch 0.95
+    prior, variance = mean (Poisson)     rows in the right zone: mean 0.967, worst 10% of blocks 0.944; by marginals 0.969   | per zone mule_ 0.98 veloc 0.88 layer 0.97 sim_s 0.94 accou 1.00 phish 0.99 qr_sw 0.98 refun 0.91 fake_ 0.93 loan_ 0.89 merch 0.96
+    prior, variance = 3 x mean           rows in the right zone: mean 0.960, worst 10% of blocks 0.925; by marginals 0.962   | per zone mule_ 0.98 veloc 0.84 layer 0.97 sim_s 0.92 accou 1.00 phish 0.99 qr_sw 0.98 refun 0.88 fake_ 0.92 loan_ 0.87 merch 0.95
+  zone lengths vary 2x more than Poisson:
+    no length prior                      rows in the right zone: mean 0.941, worst 10% of blocks 0.878; by marginals 0.943   | per zone mule_ 0.96 veloc 0.76 layer 0.96 sim_s 0.86 accou 0.99 phish 0.99 qr_sw 0.98 refun 0.84 fake_ 0.92 loan_ 0.82 merch 0.96
+    prior, variance = mean (Poisson)     rows in the right zone: mean 0.964, worst 10% of blocks 0.937; by marginals 0.966   | per zone mule_ 0.97 veloc 0.88 layer 0.97 sim_s 0.94 accou 0.99 phish 0.99 qr_sw 0.98 refun 0.90 fake_ 0.91 loan_ 0.85 merch 0.95
+    prior, variance = 3 x mean           rows in the right zone: mean 0.957, worst 10% of blocks 0.912; by marginals 0.959   | per zone mule_ 0.96 veloc 0.86 layer 0.97 sim_s 0.91 accou 0.99 phish 0.99 qr_sw 0.99 refun 0.88 fake_ 0.93 loan_ 0.84 merch 0.96
+
+test block: zone-length prior with variance = 3.0 x mean; rows whose zone differs from the phone-space segmentation without a prior: 4 of 564
+  zone lengths in ids, expected from train proportions vs found: mule_a 111/118, veloci 84/89, layeri 80/81, sim_sw 69/68, accoun 292/293, phishi 67/79, qr_swa 115/102, refund 37/39, fake_c 22/12, loan_a 17/12, mercha 25/27
+  rows with zone probability under 0.8: 20; under 0.6: 11
+
+test block ids 473632..474551: 410 phones, 564 rows
+shape: (11, 8)
++--------------------+----------+---------+--------+------+------------+-----------+------------------+
+| zone               | first_id | last_id | phones | rows | base_legit | base_same | base_other_fraud |
+| ---                | ---      | ---     | ---    | ---  | ---        | ---       | ---              |
+| str                | i64      | i64     | u32    | u32  | u32        | u32       | u32              |
++=====================================================================================================+
+| mule_account       | 473632   | 473749  | 80     | 80   | 56         | 20        | 4                |
+| velocity_bot       | 473750   | 473838  | 29     | 29   | 28         | 0         | 1                |
+| layering_chain     | 473839   | 473917  | 39     | 39   | 20         | 19        | 0                |
+| sim_swap           | 473920   | 473987  | 50     | 92   | 13         | 9         | 70               |
+| account_takeover   | 473990   | 474279  | 75     | 187  | 13         | 171       | 3                |
+| phishing_collect   | 474281   | 474359  | 43     | 43   | 27         | 14        | 2                |
+| qr_swap            | 474361   | 474460  | 41     | 41   | 24         | 17        | 0                |
+| refund_abuse       | 474462   | 474500  | 26     | 26   | 15         | 10        | 1                |
+| fake_cashback      | 474502   | 474512  | 8      | 8    | 5          | 1         | 2                |
+| loan_app_extortion | 474517   | 474524  | 5      | 5    | 2          | 3         | 0                |
+| merchant_collusion | 474525   | 474549  | 14     | 14   | 12         | 1         | 1                |
++--------------------+----------+---------+--------+------+------------+-----------+------------------+
+
+wrote cache/device_zone.parquet: 7406 rows (833 test, incl. the bot pool)

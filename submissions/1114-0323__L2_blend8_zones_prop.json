@@ -1,0 +1,10 @@
+{
+  "run": "zone_blend8_zones_prop",
+  "base": "submissions/1113-2140__L2_blend8_beh3.csv",
+  "changed": 306,
+  "predicted_fraud_share": 0.015327229048821485,
+  "sep_macro_f1_honest": NaN,
+  "file": "1114-0323__L2_blend8_zones_prop.csv",
+  "sha256": "4231a2f89238acb8b93f6cd1a623df6cd784c6aa8e15fc59c8debd5a3c16b577",
+  "written": "2026-11-14T03:23:19"
+}

@@ -1,4 +1,4 @@
-# Device-id blocks (L2, 14 Nov 03:20)
+# Device-id blocks (L2, 14 Nov 03:20; block end, length prior and linked rows added 04:00)
 
 The generator hands out new phone ids from a counter: fraud first, class by class, then ordinary new phones.
 This was hidden from our models because we never fed raw ids (and train and test use different id ranges, so
@@ -10,10 +10,10 @@ a raw id would not transfer anyway).
 |---|---|---|
 | 0 to 419999 | each account's own phone (id = account number) | 92% of rows |
 | 420000 to 422999 | bot pool, reused in every month | every row velocity_bot |
-| 423000 to 428445 | phones first used inside a fraud episode | 88.4% fraud-labelled; the rest is the unreported share |
-| 428446 to 473631 | ordinary new phones, each used exactly once | fraud of any kind: about 0.1% |
-| 473632 to 474543 | **test month's fraud block** (separate run, half the size) | found without labels |
-| 474544 to 482013 | test month's ordinary new phones | each used once |
+| 423000 to 428454 | phones first used inside a fraud episode | 88.4% fraud-labelled; the rest is the unreported share |
+| 428455 to 473631 | ordinary new phones, each used exactly once, no id skipped | fraud of any kind: 0.07% |
+| 473632 to 474551 | **test month's fraud block** (separate run, a sixth of the train block) | found without labels |
+| 474552 to 482013 | test month's ordinary new phones | each used once, no id skipped |
 
 Inside the fraud block the zones follow the label order. Train (true zones from labels):
 
@@ -62,3 +62,74 @@ Test changes: 70 takeover -> sim_swap, 211 legit -> fraud (56 mule, 28 velocity,
 18 refund, 26 sim/takeover, 10 collusion, 2 cashback), 14 other type changes.
 
 Submission: `submissions/1114-0319__L2_blend8_zones.csv` (the 0.5019 file with those 295 rows changed).
+
+## Block end (corrected 14 Nov 04:00)
+
+The first rule (three dense windows) cut the block 9 ids early. Ordinary new phones use every id, so the block
+ends right after the last id that no row uses: 428454 in train, 474551 in test. The five train rows gained
+(428446, 428450 to 428453) are four merchant_collusion and one legit label. In test this adds 4 rows.
+
+## Linked rows (`src/zone_apply.py --propagate`)
+
+A block phone settles the class of one payment; other payments of the same episode share that class.
+Checked in train on rows off the block that the blend already calls fraud:
+
+| Link to a block row | Rows where link and blend disagree | Link right | Blend right | Used |
+|---|---|---|---|---|
+| same sender within 2 h, both among sim_swap / takeover | 24 | 100% | 0% | yes (R2) |
+| same personal receiver within 24 h, blend mule -> link velocity | 45 | 98% | 2% | yes (R1) |
+| same personal receiver within 24 h, blend layering -> link mule | 24 | 46% | 0% | yes (R1) |
+| same personal receiver within 24 h, link says sim_swap / takeover | 30 | 0 to 20% | 47% | no |
+| same sender within 24 h, same receiver within 7 days | | worse than the blend | | no |
+| rows the blend calls legit that link to a block row | | 3% fraud | | never flipped |
+
+Sep raw macro-F1: 0.5006 (zones) -> 0.5014 (zones + linked rows). Test: 11 more rows change.
+Per class on Sep (before -> after): sim_swap 0.379 -> 0.473, takeover 0.377 -> 0.434, collusion 0.387 -> 0.409,
+mule 0.397 -> 0.418, phishing 0.448 -> 0.468, loan 0.387 -> 0.407, cashback 0.353 -> 0.372, the rest +0.015 to +0.017.
+
+## How sure are the test zones (`python -m src.device_block --runs ... --simulate 100`)
+
+The 98.5% above is for the whole train block. The test block is 6 times shorter, so 100 test-sized blocks were
+cut out of the train block (each zone a random slice of the right length) and segmented with the cross-fitted
+classifier. Rows that get their true zone:
+
+| Method | Lengths vary like Poisson | Lengths vary twice as much |
+|---|---|---|
+| no prior on zone length (the 03:19 file) | 94.7% (worst tenth of blocks 90.2%) | 94.1% |
+| zone length ~ train share, variance = mean (used now) | 96.7% (worst tenth 94.4%) | 96.4% |
+| same, variance = 3 x mean | 96.0% | 95.7% |
+
+Weakest zones with the prior: velocity 0.88, loan 0.89, refund 0.91, cashback 0.93, sim_swap 0.94; all others
+0.96 to 1.00. The first five test zones come out within 7% of the train proportions with no prior at all, which
+is why the prior is reasonable: the generator keeps class shares fixed.
+
+Test zones now (ids): mule 473632-473749, velocity 473750-473838, layering 473839-473917, sim_swap 473920-473987,
+takeover 473990-474279, phishing 474281-474359, qr_swap 474361-474460, refund 474462-474500, cashback
+474502-474512, loan 474517-474524, collusion 474525-474549. 23 of 564 rows have zone probability under 0.8.
+
+## Files
+
+| File | What | Rows changed vs the 0.5019 file | Expected public |
+|---|---|---|---|
+| `submissions/1114-0319__L2_blend8_zones.csv` | zones, first block-end rule | 295 | about 0.526 |
+| `submissions/1114-0359__L2_blend8_zones2.csv` | corrected block end + length prior + linked rows | 310 | about 0.528 |
+
+Expected change computed two ways: Sep out-of-fold with label-free zones (+0.0265), and from first principles on
+the test file (each changed row scored with 0.884 x 0.965 x zone accuracy; +0.027). About 93 of the changed rows
+fall in the public 30%, so the public number can land 0.006 either side.
+
+## What was checked and holds nothing (14 Nov, 03:30 to 04:00)
+
+- Transaction ids: uniform random 32-bit, no arithmetic progression, no hash of a counter, no common seed.
+- Account and merchant id ranges: fraud share flat across id bins.
+- Rows dated after the month end (147 in train, 88% fraud; 46 in test): the blend already calls them fraud
+  with the right type.
+- Hidden fraud (the 63%): same as legit rows on per-account consistency of account age, device age, SIM age,
+  app, city, balance chain; their senders and receivers are not the accounts of visible fraud.
+- Unreported rows (real fraud labelled legit, 12.6% of confident fraud predictions): not predictable
+  (AUC 0.516), independent coin flips inside an episode.
+- Type mix-ups that remain (Sep: velocity called mule 125, mule called layering 98, takeover called sim_swap
+  92, cashback / phishing 129): whole episodes generated in one class's loop with another class's pattern.
+  19 velocity-labelled fan-in episodes against 185 mule ones: no episode statistic separates them (best AUC
+  0.65 on 19 cases). Only a block phone inside the episode tells.
+- Larger blends (up to 31 runs): +0.0003 to +0.0009 on Sep. The base model is saturated.
