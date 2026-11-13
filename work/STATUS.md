@@ -4,6 +4,15 @@ Edit your own row when you start or finish something, then commit and push right
 
 Last updated: 13 Nov 14:16 by L2.
 
+## L2, 18:30: WRONG-TYPE LABELS FIXED, rebuild your labels (read first)
+
+Probes on the public board: qr_swap 0.1261, mule 0.1235, velocity 0.1109, collusion 0.1039 (F1 about 0.53 / 0.50 / 0.35 / 0.27).
+Collusion was the outlier: the train labels file collusion under qr_swap and refund_abuse, and swap sim_swap/ATO,
+phishing/cashback, velocity/mule. Test labels are clean. `src/labels_clean.py` now applies five definition rules
+(2,671 rows retyped). **Every machine: `git pull` then `python -m src.labels_clean --from-changes`, and retrain.**
+New L2 blend `submissions/1113-1828__L2_fwt3_blend3.csv`: test-like Sep 0.579 vs 0.522 for the uploaded file.
+Judge models on Sep with clean labels plus simulated 2.32% noise (`src/probe.py` shows how), not on raw Sep.
+
 ## L2, 14:16: corrected line is in git
 
 - Every machine: `python -m src.labels_clean --from-changes` (identical `labels_clean.parquet` from `audit/labels_clean_changes.csv`), then build groups with `--view fw_s0`. Configs: `view: fw_s0`, `labels: clean`, `drop_features: [ip_risk_rank]`.

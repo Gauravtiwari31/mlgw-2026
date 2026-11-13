@@ -28,7 +28,7 @@ import time
 import numpy as np
 import polars as pl
 
-from .common import CACHE, LABEL_TO_ID, LABELS, N_CLASSES, ROOT, load_features, load_raw
+from .common import CACHE, LABEL_TO_ID, LABELS, N_CLASSES, ROOT, load_features, load_raw  # noqa: F401
 
 GROUPS = ["base_v1", "flow_v1", "behaviour_v1", "behaviour_v2"]
 PROBS = CACHE / "labels_clean_probs.parquet"
@@ -98,6 +98,60 @@ def from_changes() -> None:
           f"clean fraud share {out.filter(pl.col('keep'))['label_clean'].ne('legit').mean():.2%}")
 
 
+def apply_type_rules(out: pl.DataFrame) -> pl.DataFrame:
+    """Fix fraud rows filed under the wrong type, using each class's definition (PROBLEM_STATEMENT.md).
+
+    Only rows already judged real fraud are touched. Status of a changed row becomes 'type_rule'.
+      1. refund_abuse rows that are not refund claims, from senders who never claim a refund
+         -> merchant_collusion (round-number sales to one merchant from a few accounts)
+      2. sim_swap / account_takeover, per sender-day episode:
+           fresh SIM (< 72 h) and no new phone (< 3 days) -> sim_swap
+           new phone and no fresh SIM                    -> account_takeover
+      3. phishing_collect rows that are part of a fake-cashback exchange (a <= Rs 10 credit between
+         the pair followed by a payment back within 24 h, either direction)  -> fake_cashback
+         fake_cashback rows that are COLLECT requests with no such exchange   -> phishing_collect
+      4. qr_swap rows paid to a MERCHANT in a round amount (>= Rs 1,000, multiple of 500)
+         -> merchant_collusion (a swapped QR sends the money to a person, not the shop)
+      5. velocity_bot rows paid to a person whose account gets payments from 2+ other senders
+         within 24 h -> mule_account (bots pay gaming / e-commerce merchants)
+    """
+    raw = load_raw().filter(pl.col("split") == "train").select(
+        "txn_id", "ts", "sender_id", "txn_type", "receiver_type", "amount", "sim_age_hours", "device_age_days")
+    fl = load_features("flow_v1", "full").select("txn_id", "pair_rev_tiny_n_past_24h", "pair_rev_n_future_24h",
+                                                "rcv_in_senders_past_24h", "rcv_in_senders_future_24h")
+    d = out.join(raw, on="txn_id", how="left", maintain_order="left").join(fl, on="txn_id", how="left", maintain_order="left")
+    real = pl.col("status").is_in(["fraud", "wrong_type", "unreported_typed"])
+    lab = pl.col("label_clean")
+    sender_refunds = d.group_by("sender_id").agg(_srf=(pl.col("txn_type") == "REFUND").sum())
+    d = d.join(sender_refunds, on="sender_id", how="left", maintain_order="left")
+    ep = d.filter(real & lab.is_in(["sim_swap", "account_takeover"])).group_by("sender_id", pl.col("ts").dt.date().alias("_day")).agg(
+        _sim=(pl.col("sim_age_hours") < 72).any(), _dev=(pl.col("device_age_days") < 3).any())
+    d = d.with_columns(_day=pl.col("ts").dt.date()).join(ep, on=["sender_id", "_day"], how="left", maintain_order="left")
+    cash_x = ((pl.col("amount") <= 10) & (pl.col("pair_rev_n_future_24h").fill_null(0) > 0)) | (pl.col("pair_rev_tiny_n_past_24h").fill_null(0) > 0)
+    new = (
+        pl.when(real & (lab == "refund_abuse") & (pl.col("txn_type") != "REFUND") & (pl.col("_srf") == 0)).then(pl.lit("merchant_collusion"))
+        .when(real & lab.is_in(["sim_swap", "account_takeover"]) & pl.col("_sim") & ~pl.col("_dev")).then(pl.lit("sim_swap"))
+        .when(real & lab.is_in(["sim_swap", "account_takeover"]) & pl.col("_dev") & ~pl.col("_sim")).then(pl.lit("account_takeover"))
+        .when(real & (lab == "phishing_collect") & cash_x).then(pl.lit("fake_cashback"))
+        .when(real & (lab == "fake_cashback") & (pl.col("txn_type") == "COLLECT") & ~cash_x).then(pl.lit("phishing_collect"))
+        .when(real & (lab == "qr_swap") & (pl.col("receiver_type") == "MERCHANT") & (pl.col("amount") >= 1000)
+              & ((pl.col("amount") * 100).round(0) % 50000 == 0)).then(pl.lit("merchant_collusion"))
+        .when(real & (lab == "velocity_bot") & (pl.col("receiver_type") == "P2P")
+              & ((pl.col("rcv_in_senders_past_24h").fill_null(0) + pl.col("rcv_in_senders_future_24h").fill_null(0)) >= 2)).then(pl.lit("mule_account"))
+        .otherwise(lab)
+    )
+    d = d.with_columns(_new=new)
+    changed = d["_new"] != d["label_clean"]
+    ch = d.filter(changed).group_by("label_clean", "_new").agg(n=pl.len()).sort("n", descending=True)
+    print("type rules: rows moved (from -> to)")
+    for a, b, n in ch.iter_rows():
+        print(f"  {a:<20} -> {b:<20} {n:>6}")
+    return d.with_columns(
+        label_clean=pl.col("_new"),
+        status=pl.when(changed).then(pl.lit("type_rule")).otherwise(pl.col("status")),
+    ).select(out.columns)
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--refit", action="store_true")
@@ -143,6 +197,8 @@ def main() -> None:
         "status": status.astype(str), "p_fraud": p_fraud.astype(np.float32),
         "top_fraud": [LABELS[i] for i in top], "top_share": top_share.astype(np.float32),
     })
+    out = apply_type_rules(out)
+    label_clean = out["label_clean"].replace_strict(LABEL_TO_ID, return_dtype=pl.Int32).to_numpy()
     out.write_parquet(OUT)
     CHANGES.parent.mkdir(exist_ok=True)
     out.filter(~pl.col("status").is_in(["legit", "fraud"])).select("txn_id", "label_clean", "keep", "status").write_csv(CHANGES)
