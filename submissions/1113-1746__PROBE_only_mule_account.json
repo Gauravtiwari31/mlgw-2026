@@ -1,0 +1,12 @@
+{
+  "run": "PROBE_only_mule_account",
+  "probe_of": "submissions/1113-1401__L2_lgbm_fw-clean_b1-f1-beh12_s0__clean.csv",
+  "keep": [
+    "mule_account"
+  ],
+  "predicted_fraud_share": 0.0028206092515983454,
+  "sep_macro_f1_honest": NaN,
+  "file": "1113-1746__PROBE_only_mule_account.csv",
+  "sha256": "20c2a42e9e43fd66a22a9408f2828b97175ea544cc30d2d6f15fac3f9409fd59",
+  "written": "2026-11-13T17:46:44"
+}

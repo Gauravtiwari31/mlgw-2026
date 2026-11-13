@@ -1,0 +1,12 @@
+{
+  "run": "PROBE_only_merchant_collusion",
+  "probe_of": "submissions/1113-1401__L2_lgbm_fw-clean_b1-f1-beh12_s0__clean.csv",
+  "keep": [
+    "merchant_collusion"
+  ],
+  "predicted_fraud_share": 0.0003223553430398109,
+  "sep_macro_f1_honest": NaN,
+  "file": "1113-1746__PROBE_only_merchant_collusion.csv",
+  "sha256": "69d738a19c18505d9fe91940dbabff62b537e08c8e333c9892284d28af8c0ccf",
+  "written": "2026-11-13T17:46:40"
+}
