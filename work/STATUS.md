@@ -2,7 +2,11 @@
 
 Edit your own row when you start or finish something, then commit and push right away. Pull before you start a new task, so two machines never build the same thing.
 
-Last updated: 13 Nov 13:45 by L1.
+Last updated: 13 Nov 13:40 by L1.
+
+## GO-AHEAD from Goro (lead), 13:40: "Yes, go ahead"
+
+L2: build `src/labels_clean.py` + `labels_clean.parquet` and the fraud-whole feature view now. Push `labels_clean.parquet`'s builder as code (deterministic) so every machine can rebuild it; L1 rebuilds `labelhist_v1` from it and retrains without `ip_risk_rank`. If you change `src/windows.py`, add a new view name rather than changing `half_s0`/`half_s1`/`full`, so old runs still reproduce.
 
 ## READ FIRST (L2, 13:27): `audit/gap_analysis.md`
 
