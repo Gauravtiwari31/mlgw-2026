@@ -1,0 +1,17 @@
+# M6 variant: + labelhist_v1 (entity fraud history from other months)
+run_id: L3_nn_base1-flow1-beh1-beh3-lh1_s0
+features: [base_v1, flow_v1, behaviour_v1, behaviour_v3, labelhist_v1]
+view: half_s0
+seed: 0
+labels: raw
+class_weight_power: 0.5
+legit_keep: 0.2
+drop_features: [ip_risk_rank]
+lr: 0.001
+weight_decay: 0.00001
+batch: 4096
+epochs: 40
+patience: 5
+nn:
+  hidden: [512, 256]
+  dropout: 0.2

@@ -1,0 +1,19 @@
+# M3 + behaviour_v3: CatBoost GPU, base1-flow1-beh1 + city-distance / travel-speed features
+# Compares against L3_catboost_base1-flow1-beh1_s0 (Sep 0.4329 argmax / 0.4361 post)
+run_id: L3_catboost_base1-flow1-beh1-beh3_s0
+features: [base_v1, flow_v1, behaviour_v1, behaviour_v3]
+view: half_s0
+seed: 0
+labels: raw
+class_weight_power: 0.5
+legit_keep: 0.2
+drop_features: [ip_risk_rank]
+num_boost_round: 6000
+early_stopping: 100
+params:
+  learning_rate: 0.05
+  depth: 8
+  border_count: 128
+  l2_leaf_reg: 3.0
+  task_type: GPU
+  devices: "0"

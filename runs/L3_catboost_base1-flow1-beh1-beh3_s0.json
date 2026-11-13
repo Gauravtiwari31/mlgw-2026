@@ -1,0 +1,33 @@
+{
+  "run_id": "L3_catboost_base1-flow1-beh1-beh3_s0",
+  "config": "configs/L3_catboost_base1-flow1-beh1-beh3_s0.yaml",
+  "commit": "a35dbcb",
+  "model": "catboost",
+  "features": [
+    "base_v1",
+    "flow_v1",
+    "behaviour_v1",
+    "behaviour_v3"
+  ],
+  "view": "half_s0",
+  "seed": 0,
+  "best_rounds": 6000,
+  "sep_macro_f1": 0.43409940594970226,
+  "sep_f1": {
+    "legit": 0.9867145443584869,
+    "mule_account": 0.3866608544027899,
+    "velocity_bot": 0.4842953020134228,
+    "layering_chain": 0.49515738498789347,
+    "sim_swap": 0.35105204872646734,
+    "account_takeover": 0.3258173618940248,
+    "phishing_collect": 0.4115501519756839,
+    "qr_swap": 0.4771395076201641,
+    "refund_abuse": 0.4107965766951942,
+    "fake_cashback": 0.2078922040423484,
+    "loan_app_extortion": 0.35828220858895704,
+    "merchant_collusion": 0.3138347260909935
+  },
+  "n_features": 296,
+  "oof_macro_f1": 0.43257904611788245,
+  "minutes": 62.8
+}

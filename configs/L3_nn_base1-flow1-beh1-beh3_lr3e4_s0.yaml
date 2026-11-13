@@ -1,0 +1,17 @@
+# M6 variant: slower lr, longer schedule
+run_id: L3_nn_base1-flow1-beh1-beh3_lr3e4_s0
+features: [base_v1, flow_v1, behaviour_v1, behaviour_v3]
+view: half_s0
+seed: 0
+labels: raw
+class_weight_power: 0.5
+legit_keep: 0.2
+drop_features: [ip_risk_rank]
+lr: 0.0003
+weight_decay: 0.00001
+batch: 4096
+epochs: 60
+patience: 8
+nn:
+  hidden: [512, 256]
+  dropout: 0.2
