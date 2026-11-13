@@ -2,7 +2,19 @@
 
 Edit your own row when you start or finish something, then commit and push right away. Pull before you start a new task, so two machines never build the same thing.
 
-Last updated: 13 Nov 14:16 by L2.
+Last updated: 14 Nov 04:00 by L2.
+
+## L2, 14 Nov 04:00: phone ids give away fraud rows and their class (`audit/device_blocks.md`)
+
+- New phone ids come from a counter. The test month's first 920 new-phone ids (473632 to 474551) are fraud, laid
+  out class by class in label order. `python -m src.device_block --runs <blend runs>` finds the zones without
+  labels; `python -m src.zone_apply --propagate --base <file> --runs <blend runs>` applies them to a submission.
+- File to upload: `submissions/1114-0359__L2_blend8_zones2.csv` (the 0.5019 file with 310 rows changed).
+  Sep raw labels 0.4749 -> 0.5014. Expected public about 0.528. **Score not known yet.**
+- Any new blend: run `src.zone_apply` on it as the last step. The gain is independent of the base model.
+- Not worth more time (all measured, see the audit file): more seeds or bigger blends (+0.0003), transaction ids,
+  account or merchant id ranges, hidden fraud, unreported rows, the velocity/mule and cashback/phishing mix-ups.
+- 14 Nov uploads used: 4 of 10 (probes: sim_swap 0.1147, takeover 0.1206, cashback 0.1223, phishing 0.1241).
 
 ## L2, 19:05: CORRECTION â€” the type rules below FAILED on the board (0.4738 vs 0.4987). They are switched off.
 
