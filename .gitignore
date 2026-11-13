@@ -1,0 +1,37 @@
+# Competition data: lives on S3 / Drive, never in git (train.csv is 231 MB)
+/train.csv
+/test.csv
+/accounts.csv
+/merchants.csv
+/sample_submission.csv
+data/
+
+# Generated files: synced through S3, not git
+features/
+oof/
+preds/
+submissions/
+*.parquet
+*.feather
+*.pkl
+*.joblib
+catboost_info/
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Secrets and local settings
+.env
+*.pem
+.aws/
+.claude/
+
+# OS and editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
