@@ -1,0 +1,14 @@
+# Same as L2_lgbm_base1-flow1_s0, rerun on L1 so its OOF exists here (comparison for the log-loss stopping test).
+run_id: L1_lgbm_base1-flow1_f1_s0
+features: [base_v1, flow_v1]
+view: half_s0            # density-matched view (audit/density_ab.md)
+seed: 0
+labels: raw
+legit_keep: 0.2
+class_weight_power: 0.5
+num_boost_round: 1500
+early_stopping: 60
+params:
+  learning_rate: 0.08
+  num_leaves: 63
+  min_data_in_leaf: 40

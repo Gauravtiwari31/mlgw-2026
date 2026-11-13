@@ -72,6 +72,7 @@ def train_mask_and_weights(meta: pl.DataFrame, y: np.ndarray, cfg: dict):
     keep = is_train.copy()
     if "keep" in meta.columns:  # rows flagged by label cleaning are dropped from training
         keep &= meta["keep"].fill_null(True).to_numpy()
+    cfg["_val_weight"] = w.astype(np.float32)  # class weights only, used for early stopping
     frac = cfg.get("legit_keep", 1.0)
     if frac < 1.0:  # deterministic downsampling of legit rows, weight scaled back up
         seed = cfg.get("seed", 0)
@@ -98,11 +99,21 @@ def fit(X, y, w, tr_idx, va_idx, cfg, names, rounds=None):
     cat = [n for n in names if n.startswith("cat_")]
     dtr = lgb.Dataset(X[tr_idx], y[tr_idx], weight=w[tr_idx], feature_name=names, categorical_feature=cat)
     if rounds is None:  # early stopping on the validation fold
-        dva = lgb.Dataset(X[va_idx], y[va_idx], reference=dtr)
+        # 'logloss': class-weighted multi_logloss on the validation fold, the same
+        # objective the model trains on. Smooth, so it does not stop on a lucky early round.
+        # 'macro_f1' (default for now): plain-argmax macro-F1, the original behaviour (noisy; stopped after ~20 rounds).
+        stop_on = cfg.get("early_stop_metric", "macro_f1")
+        if stop_on == "logloss":
+            params["metric"] = "multi_logloss"
+            dva = lgb.Dataset(X[va_idx], y[va_idx], weight=cfg["_val_weight"][va_idx], reference=dtr)
+            feval = None
+        else:
+            dva = lgb.Dataset(X[va_idx], y[va_idx], reference=dtr)
+            feval = _feval
         booster = lgb.train(
             params, dtr, cfg.get("num_boost_round", 2000), valid_sets=[dva], valid_names=["sep"],
-            feval=_feval,
-            callbacks=[lgb.early_stopping(cfg.get("early_stopping", 60)), lgb.log_evaluation(50)],
+            feval=feval,
+            callbacks=[lgb.early_stopping(cfg.get("early_stopping", 60)), lgb.log_evaluation(100)],
         )
         return booster, booster.best_iteration
     return lgb.train(params, dtr, rounds), rounds
