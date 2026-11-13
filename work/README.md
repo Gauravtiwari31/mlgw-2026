@@ -58,7 +58,7 @@ legit, mule_account, velocity_bot, layering_chain, sim_swap, account_takeover,
 phishing_collect, qr_swap, refund_abuse, fake_cashback, loan_app_extortion, merchant_collusion
 ```
 
-**`folds.csv`** (L1 creates it once in S1; nobody edits it afterwards)
+**`folds.csv`** is built by `python -m src.folds` on each machine. It is deterministic (hash of `txn_id`), so everyone gets the same file; it must print `sha256=6a366df1a48b8439`. It is not in git and nobody edits it.
 
 | Column | Meaning |
 |---|---|
@@ -89,7 +89,9 @@ In every view: earlier-month rows always count, later-month rows never count, an
 
 **Run outputs:** `oof/<run_id>.parquet` (train rows) and `preds/<run_id>.parquet` (test rows): `txn_id` plus the 12 probability columns. `run_id` = `<machine>_<model>_<features>_<seed>`, for example `L2_lgbm_flow2-beh1_s0`.
 
-**`runs.csv`:** one line per run: run_id, owner, machine, git commit, config file, feature versions, Sep macro-F1, 12 per-class F1 values, note.
+**Run log:** `src.train` writes `runs/<run_id>.json` (commit, config, feature versions, Sep macro-F1, 12 per-class F1 values). One file per run, so git never conflicts. Commit it with your config. Where a TASKS file says "`runs.csv` line", this JSON file is what it means.
+
+**Code:** `README.md` at the repo root has setup, the train commands and how to write a feature group with `src/windows.py`.
 
 **Where things live**
 - Code: one **private** GitHub repo (sharing code between teams is disqualifying). Opened up for the organisers only when submitting.

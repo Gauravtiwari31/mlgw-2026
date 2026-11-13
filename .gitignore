@@ -6,6 +6,10 @@
 /sample_submission.csv
 data/
 
+# Rebuilt identically on every machine by `python -m src.folds`
+/folds.csv
+cache/
+
 # Generated files: synced through S3, not git
 features/
 oof/
