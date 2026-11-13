@@ -1,0 +1,2 @@
+upload,time_ist,git_commit,run_id,config,cv_sep_macro_f1,public_score,file,sha256,note
+U1,,ae17b03,L2_hgb_starter_s0,starter_notebook.ipynb,0.2851,,submissions/U1.csv,E49BC124675EC25DF1802F8247FD656E3546B2D93FC9C5A925ACB8AA1EAB161E,"Starter baseline, notebook unchanged. Not uploaded yet: fill time_ist and public_score after the upload."

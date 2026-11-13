@@ -11,6 +11,7 @@ features/
 oof/
 preds/
 submissions/
+/submission.csv
 *.parquet
 *.feather
 *.pkl
@@ -20,6 +21,7 @@ catboost_info/
 # Python
 .venv/
 venv/
+.uv-cache/
 __pycache__/
 *.pyc
 .ipynb_checkpoints/

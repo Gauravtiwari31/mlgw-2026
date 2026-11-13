@@ -1,0 +1,33 @@
+# Python 3.11. Pinned top-level packages for every machine (L1-L4, AWS, Kaggle).
+# Versions taken from the L2 venv on 13 Nov 2026, where each one was imported and run.
+#   py -3.11 -m venv .venv  &&  .venv\Scripts\activate  &&  pip install -r requirements.txt
+# The full resolved list from L2 (Windows) is in work/L2_rtx4060_flow_main/requirements_l2_freeze.txt.
+
+# data
+polars==2.1.0
+pandas==3.1.1
+pyarrow==26.0.1
+numpy==2.4.6
+scipy==1.17.1
+
+# models
+scikit-learn==1.9.1
+lightgbm==4.7.0
+xgboost==3.2.0
+catboost==1.2.10
+optuna==5.0.0
+
+# label cleaning (L4)
+cleanlab==2.9.0
+
+# notebooks, config, misc
+matplotlib==3.11.2
+jupyterlab==4.6.6
+ipykernel==7.4.0
+pyyaml==6.0.3
+tqdm==4.70.1
+
+# PyTorch is NOT listed here: the build depends on the machine.
+# Only the overnight NN / GNN runs need it (L2, L3). Version used on L2:
+#   pip install torch==2.11.0 --index-url https://download.pytorch.org/whl/cu128
+#   pip install torch-geometric==2.8.1
