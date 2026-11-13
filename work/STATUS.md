@@ -25,7 +25,7 @@ L2 is now building `labels_clean.parquet` and the corrected feature view. L1: `l
 |---|---|---|---|
 | L1 Goro | `labelhist_v1` (entity label history from other months; claimed from L4, the MacBook has not started) | seeds of the best config at lr 0.03 | Best: stack_v1 0.4476, single base + flow + beh1 0.4468 |
 | L2 RTX 4060 | Gap analysis done (`audit/gap_analysis.md`); next is `src/labels_clean.py` + the fraud-whole feature view, waiting for the go-ahead | corrected model and submission; `flow_v2` after that | Clean-label September: 0.789 (half view), 0.826 (full view) for base + flow_v1 without ip_risk_rank |
-| L3 RTX 3050 | Not started | | |
+| L3 RTX 3050 | M3 CatBoost on GPU as soon as data lands: `src/train_catboost.py` + `configs/L3_catboost_base1-flow1-beh1_s0.yaml` (base1-flow1-beh1, half_s0, ip_risk_rank dropped). Env ready (py 3.14, pinned reqs, CatBoost sees the 3050). Data files were missing on this laptop; fetching them now | M6 NN tonight (S5); behaviour_v3 (city distance, ATO travel speed) | setup done; no runs yet |
 | L4 MacBook | Not started | | |
 
 ## Claimed feature groups (claim here before you build one)
@@ -38,6 +38,7 @@ L2 is now building `labels_clean.parquet` and the corrected feature view. L1: `l
 | `behaviour_v1` | **L1** (moved from L3: the 3050 has not started) | done, 68 features |
 | `behaviour_v2` | **L1** | done, 34 features: pair repeats, receiver repeat/evening/round shares, collect fan-in |
 | `labelhist_v1` | **L1** (moved from L4) | building |
+| `behaviour_v3` | **L3** (city distance, ATO travel speed) | planned |
 | `episodes_v1` | L4 | open |
 
 If L3 starts: pull first. `behaviour_v1` and `behaviour_v2` are done on L1; take CatBoost (M3) and the neural net (M6) on the existing groups, and `behaviour_v3` (city distance, ATO travel speed) if you want features.

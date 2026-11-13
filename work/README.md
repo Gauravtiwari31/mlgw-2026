@@ -26,7 +26,7 @@ Assumptions to correct at the merge meeting: the MacBook has at least 16 GB RAM;
 |---|---|---|---|
 | P1 | L1 | Kaggle dataset mirror, uploads | Goro |
 | P2 | L2 | | ______ |
-| P3 | L3 | | ______ |
+| P3 | L3 | | Tushar |
 | P4 | L4 MacBook | AWS console and budget | ______ |
 
 Everyone runs their own Kaggle account (see `KAGGLE/TASKS.md`).
