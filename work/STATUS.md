@@ -48,8 +48,8 @@ L2 is now building `labels_clean.parquet` and the corrected feature view. L1: `l
 | Machine | Now | Next | Last result |
 |---|---|---|---|
 | L1 Goro | `labelhist_v1` (entity label history from other months; claimed from L4, the MacBook has not started) | seeds of the best config at lr 0.03 | Best: stack_v1 0.4476, single base + flow + beh1 0.4468 |
-| L2 RTX 4060 | Corrected line done and pushed (README "Corrected line"). Waiting for the first leaderboard score | depends on the leaderboard score; `flow_v2` after that | **`submissions/1113-1414__L2_fwclean_blend4.csv`: 0.8986 clean Sep** (4 LightGBM runs: 3 seeds on `fw_s0`, 1 on `fw_s1`; base + flow + beh1 + beh2, clean labels, no ip_risk_rank). Single run 0.898. It differs from `stack_v1` on only 494 test rows, so expect a similar leaderboard score from both |
-| L3 RTX 3050 | Not started | | |
+| L2 RTX 4060 | Full-density 5-model blend training (21:00); CatBoost from L3's trainer next | 10 PM / 11:50 PM uploads | **Best public 0.5014**: `submissions/1113-1912__L2_lgbm4-xgb1_blend5.csv` |
+| L3 RTX 3050 (Tushar) | As of 14:07: M3 CatBoost on GPU: `src/train_catboost.py` + `configs/L3_catboost_base1-flow1-beh1_s0.yaml` (merged into main 21:00 by L2) | M6 NN; behaviour_v3 (city distance, ATO travel speed) | setup done; no runs logged yet |
 | L4 MacBook | Not started | | |
 
 ## Claimed feature groups (claim here before you build one)
@@ -62,6 +62,7 @@ L2 is now building `labels_clean.parquet` and the corrected feature view. L1: `l
 | `behaviour_v1` | **L1** (moved from L3: the 3050 has not started) | done, 68 features |
 | `behaviour_v2` | **L1** | done, 34 features: pair repeats, receiver repeat/evening/round shares, collect fan-in |
 | `labelhist_v1` | **L1** (moved from L4) | building |
+| `behaviour_v3` | **L3** (city distance, ATO travel speed) | planned |
 | `episodes_v1` | L4 | open |
 
 If L3 starts: pull first. `behaviour_v1` and `behaviour_v2` are done on L1; take CatBoost (M3) and the neural net (M6) on the existing groups, and `behaviour_v3` (city distance, ATO travel speed) if you want features.
