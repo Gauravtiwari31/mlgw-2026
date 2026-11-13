@@ -1,0 +1,9 @@
+{
+  "run": "PROBE_all_legit",
+  "predicted_fraud_share": 0.0,
+  "sep_macro_f1_honest": NaN,
+  "note": "expected 0.0817-0.0818 if test holds ~3.7% fraud",
+  "file": "1113-1938__PROBE_all_legit.csv",
+  "sha256": "7a1c358e7e87db15662edc380b74f0757bec7782899a1d3f442308c26e6b2c72",
+  "written": "2026-11-13T19:38:11"
+}

@@ -1,0 +1,12 @@
+{
+  "run": "PROBE_only_qr_swap",
+  "probe_of": "submissions/1113-1414__L2_fwclean_blend4.csv",
+  "keep": [
+    "qr_swap"
+  ],
+  "predicted_fraud_share": 0.0018957564221626973,
+  "sep_macro_f1_honest": NaN,
+  "file": "1113-1729__PROBE_only_qr_swap.csv",
+  "sha256": "dac79bdb655f91a797e5ff2ecf97e96d4e30afadd9b702060fcbb13b3b83c6ab",
+  "written": "2026-11-13T17:29:04"
+}

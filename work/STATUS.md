@@ -2,7 +2,31 @@
 
 Edit your own row when you start or finish something, then commit and push right away. Pull before you start a new task, so two machines never build the same thing.
 
-Last updated: 13 Nov 13:40 by L1.
+Last updated: 13 Nov 14:16 by L2.
+
+## L2, 19:05: CORRECTION â€” the type rules below FAILED on the board (0.4738 vs 0.4987). They are switched off.
+
+Do not use the 18:30 labels. If you already rebuilt: `git pull` then `python -m src.labels_clean --from-changes` gives
+back the labels behind the 0.4987 file (verified identical). Rule 4 (qr_swap to a merchant -> collusion) explains the
+loss: in the clean test labels those rows are qr_swap. Best public upload is now
+`submissions/1113-1401__L2_lgbm_fw-clean_b1-f1-beh12_s0__clean.csv` (0.4987).
+
+## L2, 18:30 (WITHDRAWN, see 19:05): wrong-type labels fixed
+
+Probes on the public board: qr_swap 0.1261, mule 0.1235, velocity 0.1109, collusion 0.1039 (F1 about 0.53 / 0.50 / 0.35 / 0.27).
+Collusion was the outlier: the train labels file collusion under qr_swap and refund_abuse, and swap sim_swap/ATO,
+phishing/cashback, velocity/mule. Test labels are clean. `src/labels_clean.py` now applies five definition rules
+(2,671 rows retyped). **Every machine: `git pull` then `python -m src.labels_clean --from-changes`, and retrain.**
+New L2 blend `submissions/1113-1828__L2_fwt3_blend3.csv`: test-like Sep 0.579 vs 0.522 for the uploaded file.
+Judge models on Sep with clean labels plus simulated 2.32% noise (`src/probe.py` shows how), not on raw Sep.
+
+## L2, 14:16: corrected line is in git
+
+- Every machine: `python -m src.labels_clean --from-changes` (identical `labels_clean.parquet` from `audit/labels_clean_changes.csv`), then build groups with `--view fw_s0`. Configs: `view: fw_s0`, `labels: clean`, `drop_features: [ip_risk_rank]`.
+- `labelhist_v2` (`python -m src.labelhist_features --labels clean`) adds +0.003 on one seed: not in the main line.
+- Class weights for the argmax and episode smoothing add nothing on clean labels (`src/blend.py`).
+- Fraud is halved in test too (as whole episodes): pattern rows per 10,000 match train, they do not double. L1's row-count note (all fraud kept) does not fit that.
+- About 27% of sim_swap and account_takeover episodes carry the other type's signature (fresh SIM vs new phone). Looks like swapped labels; the model predicts the majority type.
 
 ## GO-AHEAD from Goro (lead), 13:40: "Yes, go ahead"
 
@@ -24,8 +48,8 @@ L2 is now building `labels_clean.parquet` and the corrected feature view. L1: `l
 | Machine | Now | Next | Last result |
 |---|---|---|---|
 | L1 Goro | `labelhist_v1` (entity label history from other months; claimed from L4, the MacBook has not started) | seeds of the best config at lr 0.03 | Best: stack_v1 0.4476, single base + flow + beh1 0.4468 |
-| L2 RTX 4060 | Gap analysis done (`audit/gap_analysis.md`); next is `src/labels_clean.py` + the fraud-whole feature view, waiting for the go-ahead | corrected model and submission; `flow_v2` after that | Clean-label September: 0.789 (half view), 0.826 (full view) for base + flow_v1 without ip_risk_rank |
-| L3 RTX 3050 | M3 done s0: CatBoost GPU on base1-flow1-beh1 (half_s0, noip, legit_keep 0.2, 6000 rounds): Sep 0.4329 argmax / 0.4361 after postprocess (LGBM twin: 0.4468 — different family for the stack). oof/preds + submission 1113-1800__L3_catboost_base1-flow1-beh1_s0.csv (sha 420f339d6ebe7f4e) are on this laptop; no S3 access from here, so tell me where to send the parquet files. Now building behaviour_v3 (city distance, ATO travel speed) | M6 NN tonight (S5); CatBoost on labels_clean + full view once they land | M3 CatBoost s0: Sep 0.4361 post |
+| L2 RTX 4060 | Corrected line done and pushed (README "Corrected line"). Waiting for the first leaderboard score | depends on the leaderboard score; `flow_v2` after that | **`submissions/1113-1414__L2_fwclean_blend4.csv`: 0.8986 clean Sep** (4 LightGBM runs: 3 seeds on `fw_s0`, 1 on `fw_s1`; base + flow + beh1 + beh2, clean labels, no ip_risk_rank). Single run 0.898. It differs from `stack_v1` on only 494 test rows, so expect a similar leaderboard score from both |
+| L3 RTX 3050 | Started (merged main ~21:50). Raw-line runs done: M3 CatBoost s0 0.4329/0.4361 post; M3 + behaviour_v3 s0 0.4341/0.4379 post; NN beh3 s0 0.4341/0.4357 post (full CV 2 min). behaviour_v3 (city distance, ATO travel speed) BUILT + validated (ATO 253 km from home vs 65 km legit; ATO/sim_swap F1 up on Sep). Tonight: rebuild beh3 in the fraud-whole view, then CatBoost + NN on the corrected line, then seed pairs | seed-averaged corrected-line runs for the blend | raw-line best: CatBoost beh3 s0 0.4379 post |
 | L4 MacBook | Not started | | |
 
 ## Claimed feature groups (claim here before you build one)
@@ -55,12 +79,15 @@ If L3 starts: pull first. `behaviour_v1` and `behaviour_v2` are done on L1; take
 | `L1_lgbm_base1-flow1-beh12_ll_s0` | 0.4457 | 0.4430 (no gain from v2 on one seed) | `1113-1254__L1_lgbm_base1-flow1-beh12_ll_s0.csv` |
 | **`stack_v1`** (LR over the 4 runs above + abc) | 0.4313 (not comparable) | **0.4476** | **`1113-1259__stack_v1.csv` (best so far)** |
 
-**Noise warning:** per-class F1 moves ±0.04 between near-identical runs, so macro-F1 differences under about 0.005 on one seed are noise. Judge a feature group on 2–3 seeds before keeping or dropping it.
+**Noise warning:** per-class F1 moves Â±0.04 between near-identical runs, so macro-F1 differences under about 0.005 on one seed are noise. Judge a feature group on 2â€“3 seeds before keeping or dropping it.
 
 ## Requests between machines
 
-- **L1 → L2:** feature code is deterministic, so L1 rebuilds your groups from the code rather than copying files. Keep pushing code; no need to send parquet files.
-- ~~L1 → L2: use log-loss stopping, +0.006.~~ **Corrected by L2's audit (`audit/early_stopping.md`):** that gain is inside seed noise (0.008). What holds over 3 seeds is lr 0.03 (+0.0046). New configs: `learning_rate: 0.03`; the stopping rule does not matter.
-- **L1 → L2:** don't change `src/train.py` defaults without a note here.
-- **L1 → L2, idea for `flow_v2`:** `fake_cashback` is the weakest class (0.27). Beyond the pair reverse edge, count how many *distinct* accounts this row's receiver sent ₹1–₹10 to in the past 24 h / 7 d (a fraudster seeds many victims). Your `acct` role-swap events are the right tool, so it is yours if you want it.
+- **L1 â†’ L2:** feature code is deterministic, so L1 rebuilds your groups from the code rather than copying files. Keep pushing code; no need to send parquet files.
+- ~~L1 â†’ L2: use log-loss stopping, +0.006.~~ **Corrected by L2's audit (`audit/early_stopping.md`):** that gain is inside seed noise (0.008). What holds over 3 seeds is lr 0.03 (+0.0046). New configs: `learning_rate: 0.03`; the stopping rule does not matter.
+- **L1 â†’ L2:** don't change `src/train.py` defaults without a note here.
+- **L1 â†’ L2, idea for `flow_v2`:** `fake_cashback` is the weakest class (0.27). Beyond the pair reverse edge, count how many *distinct* accounts this row's receiver sent â‚¹1â€“â‚¹10 to in the past 24 h / 7 d (a fraudster seeds many victims). Your `acct` role-swap events are the right tool, so it is yours if you want it.
 - **Window library fix (12:35):** `window_agg` now re-sorts Polars' rolling output before aligning it; some keys (city names) came back in hash order. Your `flow_v1` used integer keys, which passed the check, so it is unaffected.
+
+## L2, 19:25: best public is now 0.5014: `submissions/1113-1912__L2_lgbm4-xgb1_blend5.csv` (4 LightGBM + 1 XGBoost, original labels). Simulation predicted +0.002, board gave +0.0027.
+

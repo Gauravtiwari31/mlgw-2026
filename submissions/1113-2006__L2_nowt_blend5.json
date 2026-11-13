@@ -1,0 +1,34 @@
+{
+  "run": "L2_nowt_blend5",
+  "runs": [
+    "L2_lgbm_fwnowt_b1-f1-beh12_s0",
+    "L2_lgbm_fwnowt_b1-f1-beh12_s1",
+    "L2_lgbm_fwnowt_b1-f1-beh12_s2",
+    "L2_lgbm_fw1nowt_b1-f1-beh12_s3",
+    "L2_xgb_fwnowt_b1-f1-beh12_s0"
+  ],
+  "labels": "clean",
+  "smooth": false,
+  "weights": {
+    "legit": 1.0,
+    "mule_account": 1.0,
+    "velocity_bot": 1.0,
+    "layering_chain": 1.0,
+    "sim_swap": 1.0,
+    "account_takeover": 1.0,
+    "phishing_collect": 1.0,
+    "qr_swap": 1.0,
+    "refund_abuse": 1.0,
+    "fake_cashback": 1.0,
+    "loan_app_extortion": 1.0,
+    "merchant_collusion": 1.0
+  },
+  "sep_macro_f1_honest": 0.9010536523467639,
+  "sep_steps": {
+    "mean of runs": 0.9010536523467639
+  },
+  "predicted_fraud_share": 0.014544366072867658,
+  "file": "1113-2006__L2_nowt_blend5.csv",
+  "sha256": "edf59bbf5c97962f72233f797485edc2e562341ea298701b0ed48e8498999b5a",
+  "written": "2026-11-13T20:06:12"
+}

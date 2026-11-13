@@ -55,7 +55,7 @@ def load_matrix(cfg: dict):
 
     labels = meta["label"]
     if cfg.get("labels", "raw") == "clean":
-        clean = pl.read_parquet(ROOT / "labels_clean.parquet")  # txn_id, label_clean, keep
+        clean = pl.read_parquet(ROOT / cfg.get("labels_file", "labels_clean.parquet")).select("txn_id", "label_clean", "keep")
         meta = meta.join(clean, on="txn_id", how="left", maintain_order="left")
         labels = meta["label_clean"].fill_null(meta["label"])
     y = labels.replace_strict(LABEL_TO_ID, default=-1, return_dtype=pl.Int32).to_numpy()
@@ -149,11 +149,15 @@ def main() -> None:
     print(f"run {run_id}: {X.shape[1]} features, {int(keep.sum())} training rows after sampling")
 
     # 1. honest score: train Jul+Aug (+ Oct-dated train rows), validate Sep
-    va = np.where(fold == 2)[0]
+    # With labels: clean, rows marked keep = False (ambiguous or untyped unreported fraud) are
+    # predicted but not scored and not used for early stopping. With raw labels nothing changes.
+    ok = meta["keep"].fill_null(True).to_numpy() if "keep" in meta.columns else np.ones(meta.height, dtype=bool)
+    sep_all = np.where(fold == 2)[0]
+    va = np.where((fold == 2) & ok)[0]
     tr = np.where(keep & (fold != 2))[0]
     booster, best = fit(X, y, w, tr, va, cfg, names)
     oof = np.zeros((meta.height, N_CLASSES), dtype=np.float32)
-    oof[va] = booster.predict(X[va], num_iteration=best)
+    oof[sep_all] = booster.predict(X[sep_all], num_iteration=best)
     rep = metric.report(y[va], oof[va].argmax(axis=1), f"\nSep validation, {best} rounds (plain argmax)")
     imp = sorted(zip(booster.feature_importance("gain"), names), reverse=True)[:25]
     print("top features by gain:", ", ".join(n for _, n in imp))
@@ -170,9 +174,11 @@ def main() -> None:
             tr_k = np.where(keep & (fold != k))[0]
             b, _ = fit(X, y, w, tr_k, va_k, cfg, names, rounds=best)
             oof[va_k] = b.predict(X[va_k])
-            print(f"fold {k} OOF macro-F1 = {metric.macro_f1(y[va_k], oof[va_k].argmax(axis=1)):.4f}")
+            sc = va_k[ok[va_k]]
+            print(f"fold {k} OOF macro-F1 = {metric.macro_f1(y[sc], oof[sc].argmax(axis=1)):.4f}")
         cv_rows = np.where(fold >= 0)[0]
         _save_probs(OOF / f"{run_id}.parquet", meta["txn_id"][cv_rows], oof[cv_rows])
+        cv_rows = cv_rows[ok[cv_rows]]  # score only the rows whose label we trust
         # 3. full fit, a few more rounds because there is 50% more data
         b, _ = fit(X, y, w, np.where(keep)[0], None, cfg, names, rounds=int(best * 1.15) + 1)
         te = np.where(is_test)[0]

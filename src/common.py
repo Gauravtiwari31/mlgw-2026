@@ -36,7 +36,9 @@ LABELS = [
 ]
 LABEL_TO_ID = {name: i for i, name in enumerate(LABELS)}
 N_CLASSES = len(LABELS)
-VIEWS = ("full", "half_s0", "half_s1")
+# fw_s0 / fw_s1: "fraud whole, legit halved", the view that matches the test month
+# (audit/gap_analysis.md section 3). Needs labels_clean.parquet (python -m src.labels_clean).
+VIEWS = ("full", "half_s0", "half_s1", "fw_s0", "fw_s1")
 
 
 def load_raw() -> pl.DataFrame:

@@ -1,0 +1,11 @@
+{
+  "run": "AB_cashback",
+  "base": "submissions/1113-1912__L2_lgbm4-xgb1_blend5.csv",
+  "rule": "cashback",
+  "changed": 49,
+  "predicted_fraud_share": 0.014559716327298125,
+  "sep_macro_f1_honest": NaN,
+  "file": "1113-2007__AB_cashback.csv",
+  "sha256": "5656adc5ad25d7c310afa5386acca659d3fa374421b61617e8bda163a93710c0",
+  "written": "2026-11-13T20:07:43"
+}

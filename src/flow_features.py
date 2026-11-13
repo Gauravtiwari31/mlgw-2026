@@ -242,6 +242,6 @@ def build(view: str) -> pl.DataFrame:
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("--view", default="half_s0", choices=["half_s0", "half_s1", "full"])
+    ap.add_argument("--view", default="half_s0", choices=["half_s0", "half_s1", "full", "fw_s0", "fw_s1"])
     a = ap.parse_args()
     save_features(build(a.view), "flow_v1", a.view)

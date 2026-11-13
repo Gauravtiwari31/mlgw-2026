@@ -53,8 +53,18 @@ def _source_table(src: pl.DataFrame, key: str) -> pl.DataFrame:
     return total.fill_null(0)
 
 
-def build() -> pl.DataFrame:
+def build(labels: str = "raw") -> pl.DataFrame:
     raw = load_raw().select("txn_id", "split", "label", "month_idx", "sender_id", "receiver_id", "device_id")
+    if labels == "clean":
+        # History counted on cleaned labels (labels_clean.parquet): noise rows count as legit,
+        # unreported and wrong-type rows count under their corrected type. With raw labels 63% of
+        # the "fraud" in an entity's history is noise (audit/gap_analysis.md).
+        from .common import ROOT
+
+        cl = pl.read_parquet(ROOT / "labels_clean.parquet").select("txn_id", "label_clean")
+        raw = raw.join(cl, on="txn_id", how="left", maintain_order="left").with_columns(
+            label=pl.col("label_clean").fill_null(pl.col("label"))
+        ).drop("label_clean")
     raw = raw.with_columns(pair=pl.concat_str(["sender_id", "receiver_id"], separator="|"))
     src = raw.filter(pl.col("split") == "train")
     is_train = pl.col("split") == "train"
@@ -82,8 +92,14 @@ def build() -> pl.DataFrame:
 
 
 if __name__ == "__main__":
-    f = build()
-    save_features(f, "labelhist_v1", "full")
+    import argparse
+
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--labels", choices=["raw", "clean"], default="raw",
+                    help="clean: writes labelhist_v2 (same feature names as v1; use one or the other)")
+    a = ap.parse_args()
+    f = build(a.labels)
+    save_features(f, "labelhist_v2" if a.labels == "clean" else "labelhist_v1", "full")
     # leakage check: rate of the row's own class in its receiver history, train months vs test
     raw = load_raw().select("txn_id", "label", "month_idx", "split")
     d = raw.join(f.select("txn_id", "lh_rr_fraud_rate", "lh_ss_fraud_rate", "lh_dv_fraud_rate"), on="txn_id")

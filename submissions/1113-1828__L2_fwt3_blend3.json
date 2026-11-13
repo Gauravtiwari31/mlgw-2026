@@ -1,0 +1,32 @@
+{
+  "run": "L2_fwt3_blend3",
+  "runs": [
+    "L2_lgbm_fwt3_b1-f1-beh12_s0",
+    "L2_lgbm_fwt3_b1-f1-beh12_s1",
+    "L2_lgbm_fw1t3_b1-f1-beh12_s3"
+  ],
+  "labels": "clean",
+  "smooth": false,
+  "weights": {
+    "legit": 1.0,
+    "mule_account": 1.0,
+    "velocity_bot": 1.0,
+    "layering_chain": 1.0,
+    "sim_swap": 1.0,
+    "account_takeover": 1.0,
+    "phishing_collect": 1.0,
+    "qr_swap": 1.0,
+    "refund_abuse": 1.0,
+    "fake_cashback": 1.0,
+    "loan_app_extortion": 1.0,
+    "merchant_collusion": 1.0
+  },
+  "sep_macro_f1_honest": 0.9674982930901925,
+  "sep_steps": {
+    "mean of runs": 0.9674982930901925
+  },
+  "predicted_fraud_share": 0.014559716327298125,
+  "file": "1113-1828__L2_fwt3_blend3.csv",
+  "sha256": "ccef07d1120031ee03dd09746b9bfe78fc8479073b8523c656178fcd3b736691",
+  "written": "2026-11-13T18:28:45"
+}
