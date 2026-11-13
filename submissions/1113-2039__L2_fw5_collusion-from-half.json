@@ -1,0 +1,24 @@
+{
+  "run": "L2_fw5_collusion-from-half",
+  "a": [
+    "L2_lgbm_fw-clean_b1-f1-beh12_s0",
+    "L2_lgbm_fw-clean_b1-f1-beh12_s1",
+    "L2_lgbm_fw-clean_b1-f1-beh12_s2",
+    "L2_lgbm_fw1-clean_b1-f1-beh12_s3",
+    "L2_xgb_fw-clean_b1-f1-beh12_s0"
+  ],
+  "b": [
+    "L2_lgbm_half-clean_b1-f1-beh12_s0",
+    "L2_lgbm_half-clean_b1-f1-beh12_s1",
+    "L2_xgb_half-clean_b1-f1-beh12_s0"
+  ],
+  "b_classes": [
+    "merchant_collusion",
+    "refund_abuse"
+  ],
+  "predicted_fraud_share": 0.014575066581728592,
+  "sep_macro_f1_honest": NaN,
+  "file": "1113-2039__L2_fw5_collusion-from-half.csv",
+  "sha256": "5910139b82c5e527ee5d8a66f682ba9edbc5744b153a019cc272edf73a3d39c8",
+  "written": "2026-11-13T20:39:05"
+}

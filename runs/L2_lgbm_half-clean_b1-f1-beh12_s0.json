@@ -1,0 +1,32 @@
+{
+  "run_id": "L2_lgbm_half-clean_b1-f1-beh12_s0",
+  "config": "configs/L2_lgbm_half-clean_b1-f1-beh12_s0.yaml",
+  "commit": "4bcf623",
+  "features": [
+    "base_v1",
+    "flow_v1",
+    "behaviour_v1",
+    "behaviour_v2"
+  ],
+  "view": "half_s0",
+  "seed": 0,
+  "best_rounds": 117,
+  "sep_macro_f1": 0.8485857565814167,
+  "sep_f1": {
+    "legit": 0.999614651986932,
+    "mule_account": 0.8770281810418445,
+    "velocity_bot": 0.9404499338332598,
+    "layering_chain": 0.8909426987060998,
+    "sim_swap": 0.7187817258883249,
+    "account_takeover": 0.7005988023952096,
+    "phishing_collect": 0.8429503261414952,
+    "qr_swap": 0.9515242378810594,
+    "refund_abuse": 0.8556263269639066,
+    "fake_cashback": 0.5894736842105263,
+    "loan_app_extortion": 0.9447513812154696,
+    "merchant_collusion": 0.8712871287128713
+  },
+  "n_features": 318,
+  "oof_macro_f1": 0.8440083283041125,
+  "minutes": 3.5
+}

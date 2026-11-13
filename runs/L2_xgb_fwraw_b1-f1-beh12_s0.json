@@ -1,0 +1,33 @@
+{
+  "run_id": "L2_xgb_fwraw_b1-f1-beh12_s0",
+  "model": "xgboost",
+  "config": "configs/L2_lgbm_fwraw_b1-f1-beh12_s0.yaml",
+  "commit": "4bcf623",
+  "features": [
+    "base_v1",
+    "flow_v1",
+    "behaviour_v1",
+    "behaviour_v2"
+  ],
+  "view": "fw_s0",
+  "labels": "raw",
+  "seed": 0,
+  "best_rounds": 113,
+  "sep_macro_f1": 0.47428244477142556,
+  "sep_f1": {
+    "legit": 0.9868655869116867,
+    "mule_account": 0.3918474687705457,
+    "velocity_bot": 0.4811949853294212,
+    "layering_chain": 0.5220277610138805,
+    "sim_swap": 0.38222222222222224,
+    "account_takeover": 0.3732744340143567,
+    "phishing_collect": 0.43575418994413406,
+    "qr_swap": 0.48850913376546845,
+    "refund_abuse": 0.49936628643852976,
+    "fake_cashback": 0.3525243578387954,
+    "loan_app_extortion": 0.3909415971394517,
+    "merchant_collusion": 0.38686131386861317
+  },
+  "oof_macro_f1": 0.4710769453715676,
+  "minutes": 2.9
+}
