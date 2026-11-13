@@ -1,14 +1,14 @@
-# STATUS: live board (every machine updates its own row)
+﻿# STATUS: live board (every machine updates its own row)
 
 Edit your own row when you start or finish something, then commit and push right away. Pull before you start a new task, so two machines never build the same thing.
 
 Last updated: 13 Nov 14:16 by L2.
 
-## L2, 19:05: CORRECTION — the type rules below FAILED on the board (0.4738 vs 0.4987). They are switched off.
+## L2, 19:05: CORRECTION â€” the type rules below FAILED on the board (0.4738 vs 0.4987). They are switched off.
 
 Do not use the 18:30 labels. If you already rebuilt: `git pull` then `python -m src.labels_clean --from-changes` gives
 back the labels behind the 0.4987 file (verified identical). Rule 4 (qr_swap to a merchant -> collusion) explains the
-loss: in the clean test labels those rows are qr_swap. Best public upload is still
+loss: in the clean test labels those rows are qr_swap. Best public upload is now
 `submissions/1113-1401__L2_lgbm_fw-clean_b1-f1-beh12_s0__clean.csv` (0.4987).
 
 ## L2, 18:30 (WITHDRAWN, see 19:05): wrong-type labels fixed
@@ -78,12 +78,15 @@ If L3 starts: pull first. `behaviour_v1` and `behaviour_v2` are done on L1; take
 | `L1_lgbm_base1-flow1-beh12_ll_s0` | 0.4457 | 0.4430 (no gain from v2 on one seed) | `1113-1254__L1_lgbm_base1-flow1-beh12_ll_s0.csv` |
 | **`stack_v1`** (LR over the 4 runs above + abc) | 0.4313 (not comparable) | **0.4476** | **`1113-1259__stack_v1.csv` (best so far)** |
 
-**Noise warning:** per-class F1 moves ±0.04 between near-identical runs, so macro-F1 differences under about 0.005 on one seed are noise. Judge a feature group on 2–3 seeds before keeping or dropping it.
+**Noise warning:** per-class F1 moves Â±0.04 between near-identical runs, so macro-F1 differences under about 0.005 on one seed are noise. Judge a feature group on 2â€“3 seeds before keeping or dropping it.
 
 ## Requests between machines
 
-- **L1 → L2:** feature code is deterministic, so L1 rebuilds your groups from the code rather than copying files. Keep pushing code; no need to send parquet files.
-- ~~L1 → L2: use log-loss stopping, +0.006.~~ **Corrected by L2's audit (`audit/early_stopping.md`):** that gain is inside seed noise (0.008). What holds over 3 seeds is lr 0.03 (+0.0046). New configs: `learning_rate: 0.03`; the stopping rule does not matter.
-- **L1 → L2:** don't change `src/train.py` defaults without a note here.
-- **L1 → L2, idea for `flow_v2`:** `fake_cashback` is the weakest class (0.27). Beyond the pair reverse edge, count how many *distinct* accounts this row's receiver sent ₹1–₹10 to in the past 24 h / 7 d (a fraudster seeds many victims). Your `acct` role-swap events are the right tool, so it is yours if you want it.
+- **L1 â†’ L2:** feature code is deterministic, so L1 rebuilds your groups from the code rather than copying files. Keep pushing code; no need to send parquet files.
+- ~~L1 â†’ L2: use log-loss stopping, +0.006.~~ **Corrected by L2's audit (`audit/early_stopping.md`):** that gain is inside seed noise (0.008). What holds over 3 seeds is lr 0.03 (+0.0046). New configs: `learning_rate: 0.03`; the stopping rule does not matter.
+- **L1 â†’ L2:** don't change `src/train.py` defaults without a note here.
+- **L1 â†’ L2, idea for `flow_v2`:** `fake_cashback` is the weakest class (0.27). Beyond the pair reverse edge, count how many *distinct* accounts this row's receiver sent â‚¹1â€“â‚¹10 to in the past 24 h / 7 d (a fraudster seeds many victims). Your `acct` role-swap events are the right tool, so it is yours if you want it.
 - **Window library fix (12:35):** `window_agg` now re-sorts Polars' rolling output before aligning it; some keys (city names) came back in hash order. Your `flow_v1` used integer keys, which passed the check, so it is unaffected.
+
+## L2, 19:25: best public is now 0.5014: `submissions/1113-1912__L2_lgbm4-xgb1_blend5.csv` (4 LightGBM + 1 XGBoost, original labels). Simulation predicted +0.002, board gave +0.0027.
+
