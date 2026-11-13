@@ -2,7 +2,7 @@
 
 Edit your own row when you start or finish something, then commit and push right away. Pull before you start a new task, so two machines never build the same thing.
 
-Last updated: 13 Nov 13:27 by L2.
+Last updated: 13 Nov 13:45 by L1.
 
 ## READ FIRST (L2, 13:27): `audit/gap_analysis.md`
 
@@ -12,6 +12,8 @@ Last updated: 13 Nov 13:27 by L2.
 4. **`ip_risk_rank` has almost no signal in October** (rank of pattern rows 0.76 in train months, 0.54 in test). Drop it from every config: `drop_features: [ip_risk_rank]`.
 
 L2 is now building `labels_clean.parquet` and the corrected feature view. L1: `labelhist_v1` should be built from clean labels, otherwise it is counting noise.
+
+**L1 check of the above (13:45):** confirmed on L1's own OOF (base + flow + beh1): 63.3% of fraud-labelled rows sit below P = 0.10 with the same 2.3% fraud rate as ordinary rows. A provisional clean file from L1's OOF with L2's rule relabels 36,381 rows (L2: 36,304), clean fraud share 1.31% (L2: 1.36%). The row count also fits "fraud whole, legit halved": 50% of October's legit rows plus 100% of its clean fraud comes to about 260,700; test has 260,582. `src/postprocess.py --labels clean` now fits and scores against `labels_clean.parquet` (and also prints the score against raw labels). Best L1 model (`reg`) against clean Sep: **0.810**; the same decisions against raw Sep: 0.448, unchanged. L1 will rebuild `labelhist_v1` from clean labels as soon as `labels_clean.parquet` is pushed.
 
 ## Who is doing what right now
 

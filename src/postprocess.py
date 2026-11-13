@@ -29,7 +29,7 @@ import polars as pl
 from scipy.optimize import minimize
 
 from . import metric
-from .common import LABEL_TO_ID, LABELS, N_CLASSES, OOF, PREDS, SUBS, load_folds, load_raw
+from .common import LABEL_TO_ID, LABELS, N_CLASSES, OOF, PREDS, ROOT, SUBS, load_folds, load_raw
 
 GRID = np.exp(np.linspace(-3.0, 3.0, 25))
 EPS = 1e-12
@@ -151,14 +151,29 @@ def main() -> None:
     ap.add_argument("--prior", choices=["none", "em"], default="none")
     ap.add_argument("--fraud-boost", type=float, default=1.0)
     ap.add_argument("--no-sub", action="store_true")
+    ap.add_argument("--labels", choices=["raw", "clean"], default="raw",
+                    help="clean: fit and score against labels_clean.parquet (audit/gap_analysis.md)")
+    ap.add_argument("--labels-file", default=str(ROOT / "labels_clean.parquet"),
+                    help="txn_id, label_clean, keep (work/README.md contract)")
     args = ap.parse_args()
 
     oof = pl.read_parquet(OOF / f"{args.run}.parquet")
     truth = load_raw().select("txn_id", "label").join(load_folds().select("txn_id", "month_fold"), on="txn_id")
     oof = oof.join(truth, on="txn_id", how="left", maintain_order="left")
-    P = oof.select(LABELS).to_numpy().astype(np.float64)
-    y = oof["label"].replace_strict(LABEL_TO_ID, return_dtype=pl.Int32).to_numpy()
-    fold = oof["month_fold"].to_numpy()
+    P_full = oof.select(LABELS).to_numpy().astype(np.float64)
+    y_raw = oof["label"].replace_strict(LABEL_TO_ID, return_dtype=pl.Int32).to_numpy()
+    fold_full = oof["month_fold"].to_numpy()
+    keep = np.ones(len(y_raw), dtype=bool)
+    y_full = y_raw
+    if args.labels == "clean":
+        cl = pl.read_parquet(args.labels_file).select("txn_id", "label_clean", "keep")
+        j = oof.select("txn_id", "label").join(cl, on="txn_id", how="left", maintain_order="left")
+        y_full = j["label_clean"].fill_null(j["label"]).replace_strict(LABEL_TO_ID, return_dtype=pl.Int32).to_numpy()
+        keep = j["keep"].fill_null(True).to_numpy()
+        changed = int((y_full != y_raw)[keep].sum())
+        print(f"clean labels from {args.labels_file}: {changed} rows relabelled, {int((~keep).sum())} rows left out; "
+              f"fraud share {float((y_raw != 0).mean()):.4f} -> {float((y_full[keep] != 0).mean()):.4f}")
+    P, y, fold = P_full[keep], y_full[keep], fold_full[keep]
     sep, rest = fold == 2, fold != 2
 
     # ---- 1. calibration, fitted on Jul+Aug, checked on Sep
@@ -176,6 +191,10 @@ def main() -> None:
     pred_share = float((predict(Q[sep], w_fit) != 0).mean())
     print(f"Sep macro-F1: plain argmax {plain:.4f} -> calibrated weighted argmax {rep['macro_f1']:.4f}; "
           f"predicted fraud share {pred_share:.4f}")
+    if args.labels == "clean":  # the same decisions scored against the raw labels, all Sep rows
+        sep_all = fold_full == 2
+        raw_score = metric.macro_f1(y_raw[sep_all], predict(calibrate(P_full[sep_all], cal), w_fit))
+        print(f"same decisions against RAW Sep labels (all rows): {raw_score:.4f}")
 
     # ---- 3. EM checks: no shift (Sep as is), then simulated shifts of known size
     print("\nEM check (weights from Jul+Aug, applied to Sep subsamples with a known fraud share)")
@@ -213,11 +232,11 @@ def main() -> None:
         return
     Qd = shift(Qt, pi_all, pi_test) if args.prior == "em" else Qt
     lab = predict(Qd, w_all, args.fraud_boost)
-    name = args.run + ("__em" if args.prior == "em" else "") + (
+    name = args.run + ("__clean" if args.labels == "clean" else "") + ("__em" if args.prior == "em" else "") + (
         f"__b{args.fraud_boost:g}" if args.fraud_boost != 1.0 else "")
     sub = pl.DataFrame({"id": preds["txn_id"], "label": [LABELS[i] for i in lab]})
     write_submission(sub, name, {
-        "run": args.run, "prior": args.prior, "fraud_boost": args.fraud_boost,
+        "run": args.run, "labels": args.labels, "prior": args.prior, "fraud_boost": args.fraud_boost,
         "calibration": cal_all, "weights": dict(zip(LABELS, map(float, w_all))),
         "train_priors": dict(zip(LABELS, map(float, pi_all))),
         "test_priors_em": dict(zip(LABELS, map(float, pi_test))),
