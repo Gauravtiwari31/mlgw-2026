@@ -216,18 +216,52 @@ def main() -> None:
     name = args.run + ("__em" if args.prior == "em" else "") + (
         f"__b{args.fraud_boost:g}" if args.fraud_boost != 1.0 else "")
     sub = pl.DataFrame({"id": preds["txn_id"], "label": [LABELS[i] for i in lab]})
-    assert sub.height == load_raw().filter(pl.col("split") == "test").height
-    SUBS.mkdir(exist_ok=True)
-    sub.write_csv(SUBS / f"{name}.csv")
-    (SUBS / f"{name}.json").write_text(json.dumps({
+    write_submission(sub, name, {
         "run": args.run, "prior": args.prior, "fraud_boost": args.fraud_boost,
         "calibration": cal_all, "weights": dict(zip(LABELS, map(float, w_all))),
         "train_priors": dict(zip(LABELS, map(float, pi_all))),
         "test_priors_em": dict(zip(LABELS, map(float, pi_test))),
         "sep_macro_f1_honest": rep["macro_f1"], "em_checks": em_checks,
         "predicted_fraud_share": float((lab != 0).mean()),
-    }, indent=2))
-    print(f"\nwrote submissions/{name}.csv  predicted fraud share {(lab != 0).mean():.4f}")
+    })
+
+
+def write_submission(sub: pl.DataFrame, name: str, info: dict) -> str:
+    """Write a submission under a new, timestamped file name. Never overwrites an existing file.
+
+    Adds one line to submissions/INDEX.csv. Submissions are tracked in git, so every version stays.
+    """
+    import datetime as dt
+
+    test_ids = load_raw().filter(pl.col("split") == "test")["txn_id"]
+    assert sub.columns == ["id", "label"] and sub.height == test_ids.len()
+    assert set(sub["id"].to_list()) == set(test_ids.to_list()), "submission ids differ from test.csv"
+    assert set(sub["label"].unique().to_list()) <= set(LABELS)
+    SUBS.mkdir(exist_ok=True)
+    stamp = dt.datetime.now().strftime("%m%d-%H%M")
+    base = f"{stamp}__{name}"
+    path, k = SUBS / f"{base}.csv", 2
+    while path.exists() or path.with_suffix(".json").exists():
+        path, k = SUBS / f"{base}_{k}.csv", k + 1
+    sub.write_csv(path)
+    digest = hashlib.sha256(path.read_bytes()).hexdigest()
+    info = {**info, "file": path.name, "sha256": digest, "written": dt.datetime.now().isoformat(timespec="seconds")}
+    path.with_suffix(".json").write_text(json.dumps(info, indent=2))
+
+    index = SUBS / "INDEX.csv"
+    row = pl.DataFrame({
+        "file": [path.name], "written": [info["written"]], "run": [str(info.get("run", ""))],
+        "sep_macro_f1_honest": [float(info.get("sep_macro_f1_honest", float("nan")))],
+        "fraud_boost": [float(info.get("fraud_boost", 1.0))], "prior": [str(info.get("prior", "none"))],
+        "predicted_fraud_share": [float(info.get("predicted_fraud_share", float("nan")))],
+        "sha256": [digest[:16]], "uploaded": [""], "public_score": [""],
+    })
+    if index.exists():
+        row = pl.concat([pl.read_csv(index, infer_schema_length=0), row.cast(pl.String)])
+    row.cast(pl.String).write_csv(index)
+    print(f"\nwrote submissions/{path.name}  predicted fraud share {info.get('predicted_fraud_share', 0):.4f}"
+          f"  sha256 {digest[:16]}")
+    return path.name
 
 
 if __name__ == "__main__":

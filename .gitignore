@@ -14,7 +14,7 @@ cache/
 features/
 oof/
 preds/
-submissions/
+submissions/*.tmp
 /submission.csv
 *.parquet
 *.feather

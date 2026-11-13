@@ -1,0 +1,9 @@
+{
+  "run": "L1_lgbm_base1_s0",
+  "method": "postprocess at 18cb1f7: raw weights, no calibration",
+  "sep_macro_f1_honest": 0.3984,
+  "predicted_fraud_share": 0.015215939704200597,
+  "file": "1113-1221__L1_lgbm_base1_s0__v1_weights_only.csv",
+  "sha256": "7f67a8ef84c7b8cc41befd5cca7ceb13b6f61c54c3910716ac0e5de18384580c",
+  "written": "2026-11-13T12:21:19"
+}
