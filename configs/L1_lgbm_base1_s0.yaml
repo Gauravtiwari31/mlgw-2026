@@ -1,0 +1,14 @@
+# Single-row baseline: base features only. The floor every relational model must beat.
+run_id: L1_lgbm_base1_s0
+features: [base_v1]
+view: half_s0            # base has no relational features, so the view does not matter here
+seed: 0
+labels: raw              # 'clean' once labels_clean.parquet exists
+legit_keep: 0.2          # keep 20% of legit training rows (weights scaled back); 1.0 for final runs
+class_weight_power: 0.5  # class weight = (n_legit / n_class) ** power
+num_boost_round: 1500
+early_stopping: 60
+params:
+  learning_rate: 0.08
+  num_leaves: 63
+  min_data_in_leaf: 40

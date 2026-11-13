@@ -89,7 +89,7 @@ In every view: earlier-month rows always count, later-month rows never count, an
 
 **Run outputs:** `oof/<run_id>.parquet` (train rows) and `preds/<run_id>.parquet` (test rows): `txn_id` plus the 12 probability columns. `run_id` = `<machine>_<model>_<features>_<seed>`, for example `L2_lgbm_flow2-beh1_s0`.
 
-**Run log:** `src.train` writes `runs/<run_id>.json` (commit, config, feature versions, Sep macro-F1, 12 per-class F1 values). One file per run, so git never conflicts. Commit it with your config. Where a TASKS file says "`runs.csv` line", this JSON file is what it means.
+**Run log:** `src.train` writes `runs/<run_id>.json` (commit, config, feature versions, Sep macro-F1, 12 per-class F1 values). One file per run, so git never conflicts. Commit it with your config. `runs.csv` at the repo root is only for runs made outside `src.train` (for example the starter notebook).
 
 **Code:** `README.md` at the repo root has setup, the train commands and how to write a feature group with `src/windows.py`.
 
