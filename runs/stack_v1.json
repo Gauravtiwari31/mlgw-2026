@@ -1,0 +1,33 @@
+{
+  "run_id": "stack_v1",
+  "model": "lr",
+  "inputs": [
+    "L1_lgbm_base1-flow1-beh1_ll_s0",
+    "L1_lgbm_base1-flow1-beh12_ll_s0",
+    "L1_lgbm_base1-flow1_ll_s0",
+    "L1_lgbm_base1abc1_s0"
+  ],
+  "commit": "f436dcf",
+  "input_sep_macro_f1": {
+    "L1_lgbm_base1-flow1-beh1_ll_s0": 0.4457485593315866,
+    "L1_lgbm_base1-flow1-beh12_ll_s0": 0.44570050460649746,
+    "L1_lgbm_base1-flow1_ll_s0": 0.438730855290509,
+    "L1_lgbm_base1abc1_s0": 0.42222449682756275
+  },
+  "sep_macro_f1": 0.4313187372527642,
+  "sep_f1": {
+    "legit": 0.9867053755912466,
+    "mule_account": 0.37261852015950375,
+    "velocity_bot": 0.4840182648401826,
+    "layering_chain": 0.5001532332209623,
+    "sim_swap": 0.35313531353135313,
+    "account_takeover": 0.29062870699881377,
+    "phishing_collect": 0.4212874442319949,
+    "qr_swap": 0.4741405082212257,
+    "refund_abuse": 0.4326738991703893,
+    "fake_cashback": 0.20060180541624875,
+    "loan_app_extortion": 0.35555555555555557,
+    "merchant_collusion": 0.3043062200956938
+  },
+  "minutes": 1.4
+}
