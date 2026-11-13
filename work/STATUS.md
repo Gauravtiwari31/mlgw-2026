@@ -2,7 +2,15 @@
 
 Edit your own row when you start or finish something, then commit and push right away. Pull before you start a new task, so two machines never build the same thing.
 
-Last updated: 13 Nov 13:40 by L1.
+Last updated: 13 Nov 14:16 by L2.
+
+## L2, 14:16: corrected line is in git
+
+- Every machine: `python -m src.labels_clean --from-changes` (identical `labels_clean.parquet` from `audit/labels_clean_changes.csv`), then build groups with `--view fw_s0`. Configs: `view: fw_s0`, `labels: clean`, `drop_features: [ip_risk_rank]`.
+- `labelhist_v2` (`python -m src.labelhist_features --labels clean`) adds +0.003 on one seed: not in the main line.
+- Class weights for the argmax and episode smoothing add nothing on clean labels (`src/blend.py`).
+- Fraud is halved in test too (as whole episodes): pattern rows per 10,000 match train, they do not double. L1's row-count note (all fraud kept) does not fit that.
+- About 27% of sim_swap and account_takeover episodes carry the other type's signature (fresh SIM vs new phone). Looks like swapped labels; the model predicts the majority type.
 
 ## GO-AHEAD from Goro (lead), 13:40: "Yes, go ahead"
 
@@ -24,7 +32,7 @@ L2 is now building `labels_clean.parquet` and the corrected feature view. L1: `l
 | Machine | Now | Next | Last result |
 |---|---|---|---|
 | L1 Goro | `labelhist_v1` (entity label history from other months; claimed from L4, the MacBook has not started) | seeds of the best config at lr 0.03 | Best: stack_v1 0.4476, single base + flow + beh1 0.4468 |
-| L2 RTX 4060 | Gap analysis done (`audit/gap_analysis.md`); next is `src/labels_clean.py` + the fraud-whole feature view, waiting for the go-ahead | corrected model and submission; `flow_v2` after that | Clean-label September: 0.789 (half view), 0.826 (full view) for base + flow_v1 without ip_risk_rank |
+| L2 RTX 4060 | Corrected line done and pushed (README "Corrected line"). Waiting for the first leaderboard score | depends on the leaderboard score; `flow_v2` after that | **`submissions/1113-1414__L2_fwclean_blend4.csv`: 0.8986 clean Sep** (4 LightGBM runs: 3 seeds on `fw_s0`, 1 on `fw_s1`; base + flow + beh1 + beh2, clean labels, no ip_risk_rank). Single run 0.898. It differs from `stack_v1` on only 494 test rows, so expect a similar leaderboard score from both |
 | L3 RTX 3050 | Not started | | |
 | L4 MacBook | Not started | | |
 
