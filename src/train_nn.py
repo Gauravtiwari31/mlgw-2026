@@ -153,11 +153,18 @@ def main() -> None:
           f"{int(keep.sum())} training rows after sampling, "
           f"device={'cuda' if torch.cuda.is_available() else 'cpu'}")
 
-    va = np.where(fold == 2)[0]
+    ok = meta["keep"].fill_null(True).to_numpy() if "keep" in meta.columns else np.ones(meta.height, dtype=bool)
+    sep_all = np.where(fold == 2)[0]
+    va = np.where((fold == 2) & ok)[0]
     tr = np.where(keep & (fold != 2))[0]
     model, sc, pv, best_ep = fit(X_num, X_cat, y, w, tr, va, cfg, cats)
     oof = np.zeros((meta.height, N_CLASSES), dtype=np.float32)
-    oof[va] = pv
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    with torch.no_grad():
+        model.eval()
+        xn_a = torch.tensor(sc.transform(X_num[sep_all]), device=device)
+        xc_a = torch.tensor(X_cat[sep_all], device=device)
+        oof[sep_all] = model(xn_a, xc_a).softmax(dim=1).cpu().numpy()
     rep = metric.report(y[va], oof[va].argmax(axis=1),
                         f"\nSep validation, {best_ep} epochs (plain argmax)")
 
@@ -173,9 +180,11 @@ def main() -> None:
             tr_k = np.where(keep & (fold != k))[0]
             _, _, pvk, _ = fit(X_num, X_cat, y, w, tr_k, va_k, cfg, cats, rounds=best_ep)
             oof[va_k] = pvk
-            print(f"fold {k} OOF macro-F1 = {metric.macro_f1(y[va_k], oof[va_k].argmax(axis=1)):.4f}")
+            sc = va_k[ok[va_k]]
+            print(f"fold {k} OOF macro-F1 = {metric.macro_f1(y[sc], oof[sc].argmax(axis=1)):.4f}")
         cv_rows = np.where(fold >= 0)[0]
         _save_probs(OOF / f"{run_id}.parquet", meta["txn_id"][cv_rows], oof[cv_rows])
+        cv_rows = cv_rows[ok[cv_rows]]  # score only the rows whose label we trust
         # full fit on all months: 15% more epochs, mirroring src.train's round scaling.
         # A tiny dummy validation index keeps the fold tensors off the 4 GB card.
         model_full, sc_full, _, _ = fit(

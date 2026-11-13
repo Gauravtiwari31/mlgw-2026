@@ -23,3 +23,4 @@ file,written,run,sep_macro_f1_honest,fraud_boost,prior,predicted_fraud_share,sha
 1113-2008__AB_cashback.csv,2026-11-13T20:08:00,AB_cashback,NaN,1.0,none,0.014559716327298125,b2b1e97ac8c3fa17,"",""
 1113-2024__L3_catboost_base1-flow1-beh1-beh3_s0.csv,2026-11-13T20:24:24,L3_catboost_base1-flow1-beh1-beh3_s0,0.4378991511477144,1.0,none,0.01488974679755317,57e6ba1cce8a3269,"",""
 1113-2033__L3_nn_base1-flow1-beh1-beh3_s0.csv,2026-11-13T20:33:35,L3_nn_base1-flow1-beh1-beh3_s0,0.43567353922549357,1.0,none,0.01511616305040256,0d10bc7f7add7d59,"",""
+1113-2059__L3_nn_fw-clean_b1-f1-beh123-lh2_s0__clean.csv,2026-11-13T20:59:56,L3_nn_fw-clean_b1-f1-beh123-lh2_s0,0.8640567804055902,1.0,none,0.014387025964955369,86a849949ccfe1ba,"",""

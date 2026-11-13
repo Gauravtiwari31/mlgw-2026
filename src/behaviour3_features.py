@@ -152,7 +152,9 @@ def build(view: str) -> pl.DataFrame:
 if __name__ == "__main__":
     import argparse
 
+    from .common import VIEWS
+
     ap = argparse.ArgumentParser()
-    ap.add_argument("--view", default="half_s0", choices=("half_s0", "half_s1", "full"))
+    ap.add_argument("--view", default="fw_s0", choices=VIEWS)
     a = ap.parse_args()
     save_features(build(a.view), "behaviour_v3", a.view)
