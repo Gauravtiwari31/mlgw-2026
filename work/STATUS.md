@@ -2,14 +2,14 @@
 
 Edit your own row when you start or finish something, then commit and push right away. Pull before you start a new task, so two machines never build the same thing.
 
-Last updated: 13 Nov 13:02 by L1.
+Last updated: 13 Nov 13:04 by L2.
 
 ## Who is doing what right now
 
 | Machine | Now | Next | Last result |
 |---|---|---|---|
 | L1 Goro | Regularised LightGBM test (trees stop at ~55 rounds: overfitting) | seed averaging | Best: stack_v1 0.4476, single base + flow + beh1 0.4468 |
-| L2 RTX 4060 | (L2: fill in) | `flow_v2`: hop matching, merchant collusion | `L2_lgbm_base1-flow1_s0`: 0.4359 Sep |
+| L2 RTX 4060 | Idle since 13:02; `flow_v2` not started yet | `flow_v2`: hop matching, merchant collusion, tiny-credit fan-out (L1's idea) | Early-stopping audit (`audit/early_stopping.md`): Sep score is flat from 10 to 500 rounds, no model setting beats seed noise (0.008); lr 0.03 is +0.0046 over 3 seeds |
 | L3 RTX 3050 | Not started | | |
 | L4 MacBook | Not started | | |
 
