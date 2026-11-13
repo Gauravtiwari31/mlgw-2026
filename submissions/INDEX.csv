@@ -30,3 +30,4 @@ file,written,run,sep_macro_f1_honest,fraud_boost,prior,predicted_fraud_share,sha
 1113-2039__L2_fw5_collusion-from-half.csv,2026-11-13T20:39:05,L2_fw5_collusion-from-half,NaN,1.0,none,0.014575066581728592,5910139b82c5e527,"",""
 1113-2047__L2_half_blend5.csv,2026-11-13T20:47:46,L2_half_blend5,0.8570819013007845,1.0,none,0.015024061523819757,f5bd3985404e3834,"",""
 1113-2059__L3_nn_fw-clean_b1-f1-beh123-lh2_s0__clean.csv,2026-11-13T20:59:56,L3_nn_fw-clean_b1-f1-beh123-lh2_s0,0.8640567804055902,1.0,none,0.014387025964955369,86a849949ccfe1ba,"",""
+1113-2119__L3_catboost_fw-clean_b1-f1-beh123-lh2_s0__clean.csv,2026-11-13T21:19:00,L3_catboost_fw-clean_b1-f1-beh123-lh2_s0,0.9023807497019027,1.0,none,0.014340975201663967,fbe83066309173ee,"",""

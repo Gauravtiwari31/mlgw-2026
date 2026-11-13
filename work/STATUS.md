@@ -49,7 +49,7 @@ L2 is now building `labels_clean.parquet` and the corrected feature view. L1: `l
 |---|---|---|---|
 | L1 Goro | `labelhist_v1` (entity label history from other months; claimed from L4, the MacBook has not started) | seeds of the best config at lr 0.03 | Best: stack_v1 0.4476, single base + flow + beh1 0.4468 |
 | L2 RTX 4060 | Full-density 5-model blend training (21:00); CatBoost from L3's trainer next | 10 PM / 11:50 PM uploads | **Best public 0.5014**: `submissions/1113-1912__L2_lgbm4-xgb1_blend5.csv` |
-| L3 RTX 3050 | Started (merged main ~21:50). Raw-line runs done: M3 CatBoost s0 0.4329/0.4361 post; M3 + behaviour_v3 s0 0.4341/0.4379 post; NN beh3 s0 0.4341/0.4357 post (full CV 2 min). behaviour_v3 (city distance, ATO travel speed) BUILT + validated (ATO 253 km from home vs 65 km legit; ATO/sim_swap F1 up on Sep). Tonight: rebuild beh3 in the fraud-whole view, then CatBoost + NN on the corrected line, then seed pairs | seed-averaged corrected-line runs for the blend | raw-line best: CatBoost beh3 s0 0.4379 post |
+| L3 RTX 3050 | Corrected line live: CatBoost beh123-lh2 s0 clean Sep 0.9016 argmax / 0.9024 post (14 min/run; config pushed, rerun locally for blends). NN beh123-lh2 s0: 0.8538/0.8641. LGBM beh123-lh2 s0: OOF 0.8964 (6 min/run). Running now: CatBoost A/B without beh3 (GPU), LGBM s1/s2 + A/B (CPU), CatBoost seeds s1/s2 + depth-10 after that, NN seeds behind those | A/B verdict on behaviour_v3 + seed-averaged runs by morning | best: CatBoost beh123-lh2 s0 0.9024 post |
 | L4 MacBook | Not started | | |
 
 ## Claimed feature groups (claim here before you build one)
