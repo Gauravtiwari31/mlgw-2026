@@ -48,7 +48,7 @@ L2 is now building `labels_clean.parquet` and the corrected feature view. L1: `l
 | Machine | Now | Next | Last result |
 |---|---|---|---|
 | L1 Goro | `labelhist_v1` (entity label history from other months; claimed from L4, the MacBook has not started) | seeds of the best config at lr 0.03 | Best: stack_v1 0.4476, single base + flow + beh1 0.4468 |
-| L2 RTX 4060 | Corrected line done and pushed (README "Corrected line"). Waiting for the first leaderboard score | depends on the leaderboard score; `flow_v2` after that | **`submissions/1113-1414__L2_fwclean_blend4.csv`: 0.8986 clean Sep** (4 LightGBM runs: 3 seeds on `fw_s0`, 1 on `fw_s1`; base + flow + beh1 + beh2, clean labels, no ip_risk_rank). Single run 0.898. It differs from `stack_v1` on only 494 test rows, so expect a similar leaderboard score from both |
+| L2 RTX 4060 | Full-density 5-model blend training (21:00); CatBoost from L3's trainer next | 10 PM / 11:50 PM uploads | **Best public 0.5014**: `submissions/1113-1912__L2_lgbm4-xgb1_blend5.csv` |
 | L3 RTX 3050 | Started (merged main ~21:50). Raw-line runs done: M3 CatBoost s0 0.4329/0.4361 post; M3 + behaviour_v3 s0 0.4341/0.4379 post; NN beh3 s0 0.4341/0.4357 post (full CV 2 min). behaviour_v3 (city distance, ATO travel speed) BUILT + validated (ATO 253 km from home vs 65 km legit; ATO/sim_swap F1 up on Sep). Tonight: rebuild beh3 in the fraud-whole view, then CatBoost + NN on the corrected line, then seed pairs | seed-averaged corrected-line runs for the blend | raw-line best: CatBoost beh3 s0 0.4379 post |
 | L4 MacBook | Not started | | |
 
