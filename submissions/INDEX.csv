@@ -16,3 +16,7 @@ file,written,run,sep_macro_f1_honest,fraud_boost,prior,predicted_fraud_share,sha
 1113-1828__L2_fwt3_blend3.csv,2026-11-13T18:28:45,L2_fwt3_blend3,0.9674982930901925,1.0,none,0.014559716327298125,ccef07d1120031ee,2026-11-13,0.4738
 1113-1912__L2_lgbm4-xgb1_blend5.csv,2026-11-13T19:12:52,L2_lgbm4-xgb1_blend5,0.9021175006775879,1.0,none,0.014559716327298125,d9b490d0b4139da6,2026-11-13,0.5014
 1113-1938__PROBE_all_legit.csv,2026-11-13T19:38:11,PROBE_all_legit,NaN,1.0,none,0.0,7a1c358e7e87db15,"",""
+1113-2006__L2_nowt_blend5.csv,2026-11-13T20:06:12,L2_nowt_blend5,0.9010536523467639,1.0,none,0.014544366072867658,edf59bbf5c97962f,"",""
+1113-2007__AB_simato.csv,2026-11-13T20:07:41,AB_simato,NaN,1.0,none,0.014559716327298125,e8a657581c2339d9,"",""
+1113-2007__AB_cashback.csv,2026-11-13T20:07:43,AB_cashback,NaN,1.0,none,0.014559716327298125,5656adc5ad25d7c3,"",""
+1113-2008__AB_cashback.csv,2026-11-13T20:08:00,AB_cashback,NaN,1.0,none,0.014559716327298125,b2b1e97ac8c3fa17,"",""

@@ -55,7 +55,7 @@ def load_matrix(cfg: dict):
 
     labels = meta["label"]
     if cfg.get("labels", "raw") == "clean":
-        clean = pl.read_parquet(ROOT / "labels_clean.parquet")  # txn_id, label_clean, keep
+        clean = pl.read_parquet(ROOT / cfg.get("labels_file", "labels_clean.parquet")).select("txn_id", "label_clean", "keep")
         meta = meta.join(clean, on="txn_id", how="left", maintain_order="left")
         labels = meta["label_clean"].fill_null(meta["label"])
     y = labels.replace_strict(LABEL_TO_ID, default=-1, return_dtype=pl.Int32).to_numpy()

@@ -1,0 +1,11 @@
+{
+  "run": "AB_simato",
+  "base": "submissions/1113-1912__L2_lgbm4-xgb1_blend5.csv",
+  "rule": "simato",
+  "changed": 32,
+  "predicted_fraud_share": 0.014559716327298125,
+  "sep_macro_f1_honest": NaN,
+  "file": "1113-2007__AB_simato.csv",
+  "sha256": "e8a657581c2339d9c1ec6e251f90b7d9075ae51367bff32a3da08f47f5158e3d",
+  "written": "2026-11-13T20:07:41"
+}
