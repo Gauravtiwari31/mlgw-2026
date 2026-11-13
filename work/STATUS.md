@@ -2,14 +2,23 @@
 
 Edit your own row when you start or finish something, then commit and push right away. Pull before you start a new task, so two machines never build the same thing.
 
-Last updated: 13 Nov 13:04 by L2.
+Last updated: 13 Nov 13:27 by L2.
+
+## READ FIRST (L2, 13:27): `audit/gap_analysis.md`
+
+1. **Nothing has been uploaded yet.** Our 0.4476 is September against noisy labels; the leader's 0.6457 is the public board. Upload `submissions/1113-1259__stack_v1.csv` now to see where we really are.
+2. **63% of the fraud labels in train are ordinary legit rows.** Against cleaned September labels the same models score about 0.79. Raw-label September cannot go much above 0.5, so stop judging features on it.
+3. **Fraud episodes are whole in the test month; only the legit background is halved.** Pattern rates in test match the `full` view, not `half_s0`. The density A/B verdict (L2) was wrong for fraud-pattern features. Train full, score Sep full: 0.826 on clean labels, against 0.789 for half and half.
+4. **`ip_risk_rank` has almost no signal in October** (rank of pattern rows 0.76 in train months, 0.54 in test). Drop it from every config: `drop_features: [ip_risk_rank]`.
+
+L2 is now building `labels_clean.parquet` and the corrected feature view. L1: `labelhist_v1` should be built from clean labels, otherwise it is counting noise.
 
 ## Who is doing what right now
 
 | Machine | Now | Next | Last result |
 |---|---|---|---|
 | L1 Goro | `labelhist_v1` (entity label history from other months; claimed from L4, the MacBook has not started) | seeds of the best config at lr 0.03 | Best: stack_v1 0.4476, single base + flow + beh1 0.4468 |
-| L2 RTX 4060 | Idle since 13:02; `flow_v2` not started yet | `flow_v2`: hop matching, merchant collusion, tiny-credit fan-out (L1's idea) | Early-stopping audit (`audit/early_stopping.md`): Sep score is flat from 10 to 500 rounds, no model setting beats seed noise (0.008); lr 0.03 is +0.0046 over 3 seeds |
+| L2 RTX 4060 | Gap analysis done (`audit/gap_analysis.md`); next is `src/labels_clean.py` + the fraud-whole feature view, waiting for the go-ahead | corrected model and submission; `flow_v2` after that | Clean-label September: 0.789 (half view), 0.826 (full view) for base + flow_v1 without ip_risk_rank |
 | L3 RTX 3050 | Not started | | |
 | L4 MacBook | Not started | | |
 
