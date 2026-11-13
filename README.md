@@ -34,6 +34,23 @@ python -m src.windows
 `src.folds` must print `sha256=6a366df1a48b8439`. If yours differs, your data files differ: stop and tell the team.
 `src.windows` is a self-test: at `half_s0` the train months should show about 141 other payments per receiver in 24 hours, close to the test month's 143.
 
+## Corrected line (13 Nov, see `audit/gap_analysis.md`)
+
+Raw train labels are 63% noise and the test month keeps fraud episodes whole. Use this from now on:
+
+```
+python -m src.labels_clean --from-changes          # labels_clean.parquet, identical on every machine
+python -m src.flow_features --view fw_s0           # every feature builder takes --view fw_s0 / fw_s1
+python -m src.behaviour_features --view fw_s0
+python -m src.behaviour2_features --view fw_s0
+python -m src.train --config configs/L2_lgbm_fw-clean_b1-f1-beh12_s0.yaml
+python -m src.blend --name <name> --runs <run> <run> ...   # mean of runs, scored on clean labels
+python -m src.audit_october --view fw_s0           # label-free October check for new features
+```
+
+In a config: `view: fw_s0`, `labels: clean`, `drop_features: [ip_risk_rank]`. Scores are reported
+against clean labels; rows with `keep = False` are not trained on and not scored.
+
 ## Train a model
 
 ```

@@ -43,17 +43,27 @@ def build_events(df: pl.DataFrame, view: str, max_window: timedelta = timedelta(
     """
     assert view in VIEWS, view
     assert max_window <= MAX_WINDOW, "windows longer than a month are not supported"
+    fraud_whole = view.startswith("fw_")
+    half_col = "half_" + view[3:] if fraud_whole else view
     folds = load_folds().select("txn_id", "half_s0", "half_s1")
     df = df.join(folds, on="txn_id", how="left", maintain_order="left")
     if view == "full":
         half = pl.lit(0, dtype=pl.Int16)
     else:
-        half = pl.when(pl.col("month_idx") < 3).then(pl.col(view)).otherwise(1).cast(pl.Int16)
+        half = pl.when(pl.col("month_idx") < 3).then(pl.col(half_col)).otherwise(1).cast(pl.Int16)
     base = df.with_columns(
         vis=pl.col("month_idx").cast(pl.Int16) * 2 + half, is_self=pl.lit(True)
     ).drop("half_s0", "half_s1")
 
     parts = [base]
+    if fraud_whole:
+        # In the test month every fraud episode is complete and only the legit background is
+        # thinned. Copy this: rows of real fraud are visible to BOTH halves of their month.
+        whole = base.join(_fraud_rows(), on="txn_id", how="semi").filter(pl.col("month_idx") < 3)
+        parts.append(whole.with_columns(
+            vis=(pl.col("month_idx").cast(pl.Int16) * 2 + (1 - (pl.col("vis") % 2))).cast(pl.Int16),
+            is_self=pl.lit(False),
+        ))
     for m in (0, 1, 2):
         tail = base.filter(
             (pl.col("month_idx") == m) & (pl.col("ts") >= MONTH_START[m + 1] - max_window)
@@ -69,6 +79,19 @@ def build_events(df: pl.DataFrame, view: str, max_window: timedelta = timedelta(
                 tail.with_columns(vis=pl.lit((m + 1) * 2 + g, dtype=pl.Int16), is_self=pl.lit(False))
             )
     return pl.concat(parts)
+
+
+def _fraud_rows() -> pl.DataFrame:
+    """txn_ids of train rows that belong to real fraud (labels_clean.parquet): real, relabelled,
+    unreported and ambiguous rows. Noise rows are ordinary legit rows and are not included."""
+    from .common import ROOT
+
+    path = ROOT / "labels_clean.parquet"
+    if not path.exists():
+        raise FileNotFoundError("labels_clean.parquet is missing. Run: python -m src.labels_clean")
+    return pl.read_parquet(path).filter(
+        (pl.col("label_clean") != "legit") | pl.col("status").is_in(["unreported", "ambiguous"])
+    ).select("txn_id")
 
 
 def _keys(key: str | list[str]) -> list[str]:
