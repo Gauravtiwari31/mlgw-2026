@@ -10,7 +10,7 @@ file,written,run,sep_macro_f1_honest,fraud_boost,prior,predicted_fraud_share,sha
 1113-1401__L2_lgbm_fw-clean_b1-f1-beh12_s0__clean.csv,2026-11-13T14:01:01,L2_lgbm_fw-clean_b1-f1-beh12_s0,0.9005403807415258,1.0,none,0.014344812765271584,787b5a7e91adee28,2026-11-13,0.4987
 1113-1414__L2_fwclean_blend4.csv,2026-11-13T14:14:58,L2_fwclean_blend4,0.8985528944566358,1.0,none,0.01461344221780476,66975b6e9053587e,"",""
 1113-1729__PROBE_only_qr_swap.csv,2026-11-13T17:29:04,PROBE_only_qr_swap,NaN,1.0,none,0.0018957564221626973,dac79bdb655f91a7,2026-11-13,0.1261
-1113-1746__PROBE_only_velocity_bot.csv,2026-11-13T17:46:37,PROBE_only_velocity_bot,NaN,1.0,none,0.0010323046104489181,d569d8e50ec17032,"",""
-1113-1746__PROBE_only_merchant_collusion.csv,2026-11-13T17:46:40,PROBE_only_merchant_collusion,NaN,1.0,none,0.0003223553430398109,69d738a19c18505d,"",""
-1113-1746__PROBE_only_mule_account.csv,2026-11-13T17:46:44,PROBE_only_mule_account,NaN,1.0,none,0.0028206092515983454,20c2a42e9e43fd66,"",""
-1113-1828__L2_fwt3_blend3.csv,2026-11-13T18:28:45,L2_fwt3_blend3,0.9674982930901925,1.0,none,0.014559716327298125,ccef07d1120031ee,"",""
+1113-1746__PROBE_only_velocity_bot.csv,2026-11-13T17:46:37,PROBE_only_velocity_bot,NaN,1.0,none,0.0010323046104489181,d569d8e50ec17032,2026-11-13,0.1109
+1113-1746__PROBE_only_merchant_collusion.csv,2026-11-13T17:46:40,PROBE_only_merchant_collusion,NaN,1.0,none,0.0003223553430398109,69d738a19c18505d,2026-11-13,0.1039
+1113-1746__PROBE_only_mule_account.csv,2026-11-13T17:46:44,PROBE_only_mule_account,NaN,1.0,none,0.0028206092515983454,20c2a42e9e43fd66,2026-11-13,0.1235
+1113-1828__L2_fwt3_blend3.csv,2026-11-13T18:28:45,L2_fwt3_blend3,0.9674982930901925,1.0,none,0.014559716327298125,ccef07d1120031ee,2026-11-13,0.4738

@@ -4,7 +4,14 @@ Edit your own row when you start or finish something, then commit and push right
 
 Last updated: 13 Nov 14:16 by L2.
 
-## L2, 18:30: WRONG-TYPE LABELS FIXED, rebuild your labels (read first)
+## L2, 19:05: CORRECTION — the type rules below FAILED on the board (0.4738 vs 0.4987). They are switched off.
+
+Do not use the 18:30 labels. If you already rebuilt: `git pull` then `python -m src.labels_clean --from-changes` gives
+back the labels behind the 0.4987 file (verified identical). Rule 4 (qr_swap to a merchant -> collusion) explains the
+loss: in the clean test labels those rows are qr_swap. Best public upload is still
+`submissions/1113-1401__L2_lgbm_fw-clean_b1-f1-beh12_s0__clean.csv` (0.4987).
+
+## L2, 18:30 (WITHDRAWN, see 19:05): wrong-type labels fixed
 
 Probes on the public board: qr_swap 0.1261, mule 0.1235, velocity 0.1109, collusion 0.1039 (F1 about 0.53 / 0.50 / 0.35 / 0.27).
 Collusion was the outlier: the train labels file collusion under qr_swap and refund_abuse, and swap sim_swap/ATO,
