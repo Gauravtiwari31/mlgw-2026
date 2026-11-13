@@ -1,0 +1,38 @@
+{
+  "run": "L2_tc_blend9",
+  "runs": [
+    "L2_lgbm_fw-clean_b1-f1-beh12_tc_s0",
+    "L2_lgbm_fw-clean_b1-f1-beh12_tc_s1",
+    "L2_lgbm_fw-clean_b1-f1-beh12_tc_s2",
+    "L2_lgbm_fw1-clean_b1-f1-beh12_tc_s3",
+    "L2_xgb_fw-clean_b1-f1-beh12_tc_s0",
+    "L2_xgb_fw-clean_b1-f1-beh12_tc_s1",
+    "L2_xgb_fw-clean_b1-f1-beh12_tc_s2",
+    "L2_xgb_fw-clean_b1-f1-beh123-lh2_tc_s0",
+    "L2_xgb_fw-clean_b1-f1-beh123-lh2_tc_s1"
+  ],
+  "labels": "clean",
+  "smooth": false,
+  "weights": {
+    "legit": 1.0,
+    "mule_account": 1.0,
+    "velocity_bot": 1.0,
+    "layering_chain": 1.0,
+    "sim_swap": 1.0,
+    "account_takeover": 1.0,
+    "phishing_collect": 1.0,
+    "qr_swap": 1.0,
+    "refund_abuse": 1.0,
+    "fake_cashback": 1.0,
+    "loan_app_extortion": 1.0,
+    "merchant_collusion": 1.0
+  },
+  "sep_macro_f1_honest": 0.9037870385983888,
+  "sep_steps": {
+    "mean of runs": 0.9037870385983888
+  },
+  "predicted_fraud_share": 0.01450599043679149,
+  "file": "1113-2211__L2_tc_blend9.csv",
+  "sha256": "d8524936b19a7feed1ef02906253bcfeaed1b2c31b98391140a20b546a986308",
+  "written": "2026-11-13T22:11:37"
+}

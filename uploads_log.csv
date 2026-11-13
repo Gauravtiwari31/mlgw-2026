@@ -6,3 +6,4 @@ P1,13-11 17:38,8f94d14,PROBE_only_qr_swap,src/probe.py,,0.1261,submissions/1113-
 P2-P4,13-11 17:54,5d43a00,PROBE velocity / collusion / mule,src/probe.py,,0.1109 / 0.1039 / 0.1235,submissions/1113-1746__PROBE_only_*.csv,,"F1 on test about 0.35 / 0.27 / 0.50."
 U4,13-11 ~19:00,c7a633d,L2_fwt3_blend3,src/blend.py,0.579 (Sep + simulated noise),0.4738,submissions/1113-1828__L2_fwt3_blend3.csv,ccef07d1120031ee,"Type rules FAILED (-0.025). qr_swap to merchant is qr_swap in test. Rules switched off."
 U5,13-11 19:17,64582a3,L2_lgbm4-xgb1_blend5,src/blend.py,0.5339 (Sep + simulated noise; +0.002 vs 0.5319),0.5014,submissions/1113-1912__L2_lgbm4-xgb1_blend5.csv,d9b490d0b4139da6,"NEW BEST. 4 LightGBM + 1 XGBoost on the 0.4987 line. Gain matches simulation."
+U7,13-11 22:00,fb7d466,L2_blend8_beh3,src/blend.py,0.5350 (Sep + simulated noise; +0.0011),0.5019,submissions/1113-2140__L2_blend8_beh3.csv,a8be1a5dac774f37,"NEW BEST. 0.5014 blend + 3 XGBoost on L3 beh123-lh2 features."
