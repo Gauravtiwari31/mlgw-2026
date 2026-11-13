@@ -1,0 +1,35 @@
+{
+  "run_id": "L2_xgb_fw-clean_b1-f1-beh123-lh2_s8",
+  "model": "xgboost",
+  "config": "configs/L2_lgbm_fw-clean_b1-f1-beh123-lh2_s0.yaml",
+  "commit": "8d30f5b",
+  "features": [
+    "base_v1",
+    "flow_v1",
+    "behaviour_v1",
+    "behaviour_v2",
+    "behaviour_v3",
+    "labelhist_v2"
+  ],
+  "view": "fw_s0",
+  "labels": "clean",
+  "seed": 8,
+  "best_rounds": 129,
+  "sep_macro_f1": 0.8968433398475107,
+  "sep_f1": {
+    "legit": 0.9998546456639607,
+    "mule_account": 0.8894668400520156,
+    "velocity_bot": 0.9297863061491496,
+    "layering_chain": 0.930627654554035,
+    "sim_swap": 0.7330508474576272,
+    "account_takeover": 0.7366336633663366,
+    "phishing_collect": 0.9079563182527302,
+    "qr_swap": 0.9792194627470857,
+    "refund_abuse": 0.9568874868559412,
+    "fake_cashback": 0.7908611599297012,
+    "loan_app_extortion": 0.9539295392953929,
+    "merchant_collusion": 0.9538461538461539
+  },
+  "oof_macro_f1": 0.8970465833514322,
+  "minutes": 3.5
+}
