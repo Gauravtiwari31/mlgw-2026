@@ -49,7 +49,7 @@ L2 is now building `labels_clean.parquet` and the corrected feature view. L1: `l
 |---|---|---|---|
 | L1 Goro | `labelhist_v1` (entity label history from other months; claimed from L4, the MacBook has not started) | seeds of the best config at lr 0.03 | Best: stack_v1 0.4476, single base + flow + beh1 0.4468 |
 | L2 RTX 4060 | Full-density 5-model blend training (21:00); CatBoost from L3's trainer next | 10 PM / 11:50 PM uploads | **Best public 0.5014**: `submissions/1113-1912__L2_lgbm4-xgb1_blend5.csv` |
-| L3 RTX 3050 | Corrected line live: CatBoost beh123-lh2 s0 clean Sep 0.9016 argmax / 0.9024 post (14 min/run; config pushed, rerun locally for blends). NN beh123-lh2 s0: 0.8538/0.8641. LGBM beh123-lh2 s0: OOF 0.8964 (6 min/run). Running now: CatBoost A/B without beh3 (GPU), LGBM s1/s2 + A/B (CPU), CatBoost seeds s1/s2 + depth-10 after that, NN seeds behind those | A/B verdict on behaviour_v3 + seed-averaged runs by morning | best: CatBoost beh123-lh2 s0 0.9024 post |
+| L3 RTX 3050 | FINAL: `submissions/1114-0608__L3_blend_all13.csv` (sha 2b2e9a14b501f9d6), 13-model mean blend (5 CatBoost + 4 LGBM + 4 NN, incl. full-data runs): clean Sep 0.9073, expected public 0.502-0.507. Tested and rejected: LR stacker (0.8909 post, mean wins), sim/ATO pairwise retype (hurts: -0.001), FT-Transformer (4GB-compatible trainer committed; >2h/fold on the 3050). Full-data verdict: CatBoost 0.9020 vs 0.9016 downsampled; LGBM 0.8986 vs 0.9012 | waiting on the lead: upload blend_all13; 2 full-data CatBoost seeds still finishing | blend_all13 clean Sep 0.9073 |
 | L4 MacBook | Not started | | |
 
 ## Claimed feature groups (claim here before you build one)

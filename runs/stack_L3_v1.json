@@ -1,0 +1,53 @@
+{
+  "run_id": "stack_L3_v1",
+  "model": "lr",
+  "inputs": [
+    "L3_catboost_fw-clean_b1-f1-beh123-lh2_fulldata_s0",
+    "L3_catboost_fw-clean_b1-f1-beh123-lh2_s0",
+    "L3_catboost_fw-clean_b1-f1-beh123-lh2_s1",
+    "L3_catboost_fw-clean_b1-f1-beh123-lh2_s2",
+    "L3_catboost_fw-clean_b1-f1-beh12-lh2_s0",
+    "L3_lgbm_fw-clean_b1-f1-beh123-lh2_s0",
+    "L3_lgbm_fw-clean_b1-f1-beh123-lh2_s1",
+    "L3_lgbm_fw-clean_b1-f1-beh123-lh2_s2",
+    "L3_lgbm_fw-clean_b1-f1-beh12-lh2_s0",
+    "L3_lgbm_fw-clean_b1-f1-beh123-lh2_fulldata_s0",
+    "L3_nn_fw-clean_b1-f1-beh123-lh2_s0",
+    "L3_nn_fw-clean_b1-f1-beh123-lh2_s1",
+    "L3_nn_fw-clean_b1-f1-beh123-lh2_s2",
+    "L3_nn_fw-clean_b1-f1-beh12-lh2_s0"
+  ],
+  "commit": "de02243",
+  "input_sep_macro_f1": {
+    "L3_catboost_fw-clean_b1-f1-beh123-lh2_fulldata_s0": 0.47384419723596644,
+    "L3_catboost_fw-clean_b1-f1-beh123-lh2_s0": 0.4744995647894019,
+    "L3_catboost_fw-clean_b1-f1-beh123-lh2_s1": 0.47300113012314055,
+    "L3_catboost_fw-clean_b1-f1-beh123-lh2_s2": 0.4743785855251737,
+    "L3_catboost_fw-clean_b1-f1-beh12-lh2_s0": 0.47393407886451605,
+    "L3_lgbm_fw-clean_b1-f1-beh123-lh2_s0": 0.4743388395645753,
+    "L3_lgbm_fw-clean_b1-f1-beh123-lh2_s1": 0.4737082563683504,
+    "L3_lgbm_fw-clean_b1-f1-beh123-lh2_s2": 0.47374004074678244,
+    "L3_lgbm_fw-clean_b1-f1-beh12-lh2_s0": 0.4745620961617136,
+    "L3_lgbm_fw-clean_b1-f1-beh123-lh2_fulldata_s0": 0.47221714984257734,
+    "L3_nn_fw-clean_b1-f1-beh123-lh2_s0": 0.45684248626375284,
+    "L3_nn_fw-clean_b1-f1-beh123-lh2_s1": 0.45487533690139625,
+    "L3_nn_fw-clean_b1-f1-beh123-lh2_s2": 0.45728495469782526,
+    "L3_nn_fw-clean_b1-f1-beh12-lh2_s0": 0.45973221686257654
+  },
+  "sep_macro_f1": 0.46443402391492156,
+  "sep_f1": {
+    "legit": 0.9868550269661113,
+    "mule_account": 0.3960482985729967,
+    "velocity_bot": 0.4835164835164835,
+    "layering_chain": 0.5177326462564413,
+    "sim_swap": 0.3536723163841808,
+    "account_takeover": 0.3518312985571587,
+    "phishing_collect": 0.4374594944912508,
+    "qr_swap": 0.4823422879565349,
+    "refund_abuse": 0.4859335038363171,
+    "fake_cashback": 0.35870516185476814,
+    "loan_app_extortion": 0.3643031784841076,
+    "merchant_collusion": 0.35480859010270777
+  },
+  "minutes": 30.5
+}

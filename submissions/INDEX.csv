@@ -51,3 +51,6 @@ file,written,run,sep_macro_f1_honest,fraud_boost,prior,predicted_fraud_share,sha
 1114-0611__L3_blend_all13_sw.csv,2026-11-14T06:11:37,L3_blend_all13_sw,0.9018480478560195,1.0,none,0.014440751855462005,2078684cd87cb819,"",""
 1114-0629__L3_lgbm_fw-clean_b1-f1-beh123-lh2_fulldata_s0__clean.csv,2026-11-14T06:29:26,L3_lgbm_fw-clean_b1-f1-beh123-lh2_fulldata_s0,0.902570627772071,1.0,none,0.014287249311157333,51d145a888a23154,"",""
 1114-0836__L3_blend_final14.csv,2026-11-14T08:36:50,L3_blend_final14,0.907107019674588,1.0,none,0.014502152873183873,f2ed1d791bac282d,"",""
+1114-0950__stack_L3_v1__clean.csv,2026-11-14T09:50:55,stack_L3_v1,0.8908725030075914,1.0,none,0.014340975201663967,41568096049f6ff8,"",""
+1114-1007__L3_catboost_fw-clean_b1-f1-beh123-lh2_fulldata_s1__clean.csv,2026-11-14T10:07:55,L3_catboost_fw-clean_b1-f1-beh123-lh2_fulldata_s1,0.8990877194916057,1.0,none,0.014298762001980183,6be5ec40fbc9440e,"",""
+1114-1123__L3_blend_max16.csv,2026-11-14T11:23:40,L3_blend_max16,0.9072359059554542,1.0,none,0.014475289927930556,47c02edf0df00865,"",""
