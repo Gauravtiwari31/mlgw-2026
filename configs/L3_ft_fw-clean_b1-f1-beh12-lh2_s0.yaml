@@ -1,0 +1,20 @@
+# FT-Transformer (L3): feature-token transformer, corrected line, NN A/B winner features (no beh3)
+run_id: L3_ft_fw-clean_b1-f1-beh12-lh2_s0
+features: [base_v1, flow_v1, behaviour_v1, behaviour_v2, labelhist_v2]
+view: fw_s0
+seed: 0
+labels: clean
+drop_features: [ip_risk_rank]
+legit_keep: 0.2
+class_weight_power: 0.5
+lr: 0.0003
+weight_decay: 0.00001
+batch: 256
+epochs: 10
+patience: 3
+ft:
+  dim: 64
+  layers: 3
+  heads: 4
+  ff: 4
+  dropout: 0.2

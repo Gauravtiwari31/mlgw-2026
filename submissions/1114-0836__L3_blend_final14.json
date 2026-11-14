@@ -1,0 +1,43 @@
+{
+  "run": "L3_blend_final14",
+  "runs": [
+    "L3_catboost_fw-clean_b1-f1-beh123-lh2_fulldata_s0",
+    "L3_catboost_fw-clean_b1-f1-beh123-lh2_s0",
+    "L3_catboost_fw-clean_b1-f1-beh123-lh2_s1",
+    "L3_catboost_fw-clean_b1-f1-beh123-lh2_s2",
+    "L3_catboost_fw-clean_b1-f1-beh12-lh2_s0",
+    "L3_lgbm_fw-clean_b1-f1-beh123-lh2_s0",
+    "L3_lgbm_fw-clean_b1-f1-beh123-lh2_s1",
+    "L3_lgbm_fw-clean_b1-f1-beh123-lh2_s2",
+    "L3_lgbm_fw-clean_b1-f1-beh12-lh2_s0",
+    "L3_lgbm_fw-clean_b1-f1-beh123-lh2_fulldata_s0",
+    "L3_nn_fw-clean_b1-f1-beh123-lh2_s0",
+    "L3_nn_fw-clean_b1-f1-beh123-lh2_s1",
+    "L3_nn_fw-clean_b1-f1-beh123-lh2_s2",
+    "L3_nn_fw-clean_b1-f1-beh12-lh2_s0"
+  ],
+  "labels": "clean",
+  "smooth": false,
+  "weights": {
+    "legit": 1.0,
+    "mule_account": 1.0,
+    "velocity_bot": 1.0,
+    "layering_chain": 1.0,
+    "sim_swap": 1.0,
+    "account_takeover": 1.0,
+    "phishing_collect": 1.0,
+    "qr_swap": 1.0,
+    "refund_abuse": 1.0,
+    "fake_cashback": 1.0,
+    "loan_app_extortion": 1.0,
+    "merchant_collusion": 1.0
+  },
+  "sep_macro_f1_honest": 0.907107019674588,
+  "sep_steps": {
+    "mean of runs": 0.907107019674588
+  },
+  "predicted_fraud_share": 0.014502152873183873,
+  "file": "1114-0836__L3_blend_final14.csv",
+  "sha256": "f2ed1d791bac282d755cbcbcd0e0ea6162c4983936508b33e7c97d5d5813bd15",
+  "written": "2026-11-14T08:36:50"
+}
