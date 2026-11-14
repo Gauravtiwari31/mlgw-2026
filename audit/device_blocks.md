@@ -282,3 +282,49 @@ Checked since the last entry, all empty:
 
 In train the ordinary-looking fraud rows are independent draws from the legit generator. Nothing in the four
 files, as far as these checks go, marks them in test either, apart from the phone counter.
+
+## 15 Nov 00:30 to 05:30: last round before the deadline (best stays 0.5417)
+
+Board at midnight: 0.6338, 0.6320, 0.6311, 0.6111, 0.6075, 0.5731, 0.5672, then 0.5547 down to us (17th, 0.5417).
+Three files built in a separate session were uploaded on 14 Nov evening and are logged in `uploads_log.csv`:
+type flips on look-alike pairs scored 0.5320 (104 rows changed) and 0.5407; `submission2.csv` scored 0.4727.
+Flipping types without a block phone in the episode loses points on the board too.
+
+**Why velocity_bot and merchant_collusion probe low on test** (F1 0.35 and 0.27 against 0.55 and 0.45 in
+September). Ordinary-looking fraud is a fixed stream per class and month (hidden velocity rows per train month:
+1,723 / 1,798 / 1,757), while visible rows come in episodes. October has 7 bot-phone bursts (269 rows) where the
+train rate gives 13 to 14, and 5 collusion merchants (85 rows) against 6 to 7. With 269 visible rows out of about
+1,240 velocity rows the best possible F1 is 0.36, which is what the probe showed. It is not a miss of ours:
+- no bursts off the bot pool in October (receiver sessions with a 10-minute gap, P2P and merchant);
+- share of rows with login-to-payment under 2 to 15 s off the pool is the same in every month;
+- mule-typed fan-in episodes in October have the same size, amounts, login times and hours as in train.
+
+**Hidden rows, checked again with different tools, all empty:**
+- value support: no numeric value, category or format occurs in hidden rows and not in legit rows; receiver type
+  x txn type mix of the hidden rows of every class equals the legit mix (no class-specific conditioning);
+- links: hidden rows share senders, receivers and phones with visible fraud 1.03 to 1.15 times as often as legit
+  rows do, and with each other exactly as often as random legit rows;
+- time: gap to the nearest visible row of the same class, hour, weekday, day of month, rows per day (chi-square
+  70.8 over 92 days) all equal to legit;
+- models (44 raw, id and side-table features, 4-fold): hidden against legit AUC 0.4996 overall and 0.49 to 0.51
+  for every class; class among hidden rows: accuracy 0.188 against 0.193 for always guessing the biggest class;
+- October only: ordinary-looking rows on block phones against legit new-phone rows: same app versions (5.0 to
+  5.2 on every test row), apps, types, amounts, ages; block rows sit slightly later in the month (rank test
+  p = 0.001, 186 rows), with no trend in train and nothing to act on;
+- `sample_submission.csv` has the ids of `test.csv` in the same order, all `legit`;
+- transaction ids are not consecutive Mersenne-Twister outputs in file order (state rebuilt from 624 ids at
+  eight offsets, both byte orders, 0 matches).
+
+**Zones.** Test zone spans equal the train spans times 920/5455 (mule 118 against 110.6, takeover 290 against
+290.8, layering 79 against 79.3, sim 68 against 68.3). Only cashback (11 against 22) and loan (8 against 17) are
+short; their visible rows (REFUND rows up to 474495, cashback at 474505, loan at 474517 to 474519, collusion at
+474529) fix the boundaries, so they stay. Time does not follow phone id inside a zone (Spearman about 0), so the
+class loops do not run in date order and the date says nothing about a boundary.
+
+**File chunks, exact.** Each train chunk is 250,000 legit rows of one batch plus the fraud rows drawn into it
+(sizes 260,742 / 260,631 / 260,481 / 260,696 / 260,870 / 260,640), shuffled; test is 2 x 125,000 legit plus
+10,582 fraud rows. Train has 64,060 fraud rows, 57,648 of them labelled: exactly 10.0% unreported. No column
+differs between chunks (KS at noise level for 19 columns) and none follows generation order inside a chunk.
+
+No organiser hint was found: no e-mail after 13 Nov, nothing on the public event page; the team workspace
+needs a login this session does not have.
