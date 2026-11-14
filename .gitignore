@@ -41,3 +41,6 @@ __pycache__/
 Thumbs.db
 .vscode/
 .idea/
+
+# train-data extracts for manual review (not for git)
+work/manual/*.csv

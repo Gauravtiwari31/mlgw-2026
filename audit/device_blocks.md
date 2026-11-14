@@ -238,3 +238,19 @@ The Gemini notes in the team's Downloads folder reach the same dead ends; their 
 ("test has no ordinary-looking fraud", "labels_clean corrupted the types") do not hold: the all-legit probe
 (0.0816) fixes test fraud at 4.1%, and the raw-label / no-wrong-type runs score lower (type accuracy 0.877
 against 0.884).
+
+## 14 Nov 15:00: class weights on a corrected ruler (`src/weighted_base.py`)
+
+The test-like ruler typed unreported rows with the blend's own guess, which penalised every type change. With
+those rows left out, class weights on the argmax (fitted on two months, scored on the third) gain +0.0018,
++0.0015, +0.0006. The same three move every time: phishing down, cashback and loan up. Fixed weights kept:
+legit 0.67, phishing 0.37, cashback 1.92, loan 1.57 (per month: +0.0018, +0.0016, +0.0010). On test 66 rows
+change before the zones (38 phishing -> cashback, 17 phishing -> legit).
+File: `submissions/1114-1420__L2_blend16_w_zones3.csv`. Expected public 0.542 to 0.544.
+
+Also empty this round: transaction ids as a seeded draw without replacement at the exact row counts (1,624
+combinations); how values are written in the raw CSV (63 text features); hidden share by phone kind x device
+age / SIM age / login / amount / balance / IP bands; pair models per look-alike cell with the Gemini
+episode-graph features (AUC 0.6 to 0.9 inside cells, but flips with out-of-month thresholds lose 0.0008).
+
+Manual review files for people (train rows only): `work/manual/README.md`.

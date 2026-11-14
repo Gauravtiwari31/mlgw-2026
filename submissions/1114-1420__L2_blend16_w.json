@@ -1,0 +1,32 @@
+{
+  "run": "weighted_blend16_w",
+  "runs": [
+    "L2_lgbm_fw-clean_b1-f1-beh12_s0",
+    "L2_lgbm_fw-clean_b1-f1-beh12_s1",
+    "L2_lgbm_fw-clean_b1-f1-beh12_s2",
+    "L2_lgbm_fw1-clean_b1-f1-beh12_s3",
+    "L2_xgb_fw-clean_b1-f1-beh12_s0",
+    "L2_xgb_fw-clean_b1-f1-beh123-lh2_s0",
+    "L2_xgb_fw-clean_b1-f1-beh123-lh2_s1",
+    "L2_xgb_fw-clean_b1-f1-beh123-lh2_s2",
+    "L2_xgb_fw-clean_b1-f1-beh123-lh2_tc_s0",
+    "L2_xgb_fw-clean_b1-f1-beh123-lh2_tc_s1",
+    "L2_xgb_fw-clean_b1-f1-beh123-lh2_tc_s3",
+    "L2_xgb_fw-clean_b1-f1-beh123-lh2_tc_s4",
+    "L2_xgb_fw-clean_b1-f1-beh123-lh2_tc_s5",
+    "L2_xgb_fw-clean_b1-f1-beh123-lh2_tc_s6",
+    "L2_xgb_fw-clean_b1-f1-beh123-lh2_tc_s7",
+    "L2_xgb_fw-clean_b1-f1-beh123-lh2_tc_s8"
+  ],
+  "weights": {
+    "legit": 0.67,
+    "phishing_collect": 0.37,
+    "fake_cashback": 1.92,
+    "loan_app_extortion": 1.57
+  },
+  "predicted_fraud_share": 0.014479127491538173,
+  "sep_macro_f1_honest": NaN,
+  "file": "1114-1420__L2_blend16_w.csv",
+  "sha256": "b711ca857d11de9a8b18f5a0e9ccc3b47efc95c13fa03d0b74e0847a36082836",
+  "written": "2026-11-14T14:20:32"
+}
