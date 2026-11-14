@@ -254,3 +254,31 @@ age / SIM age / login / amount / balance / IP bands; pair models per look-alike 
 episode-graph features (AUC 0.6 to 0.9 inside cells, but flips with out-of-month thresholds lose 0.0008).
 
 Manual review files for people (train rows only): `work/manual/README.md`.
+
+## 14 Nov 16:00: weighted file scored 0.5411; what the board implies; more empty checks
+
+`1114-1420__L2_blend16_w_zones3.csv` scored 0.5411 (best stays 0.5417). Board at 14:15, best upload per team:
+0.6338, 0.6311, 0.6111, 0.6075, 0.5818, 0.5731, then 0.5547 down to us at 0.5417 (14th). One team reached 0.5818
+with 6 entries, so it is not leaderboard probing.
+
+**Arithmetic.** Test has 10,582 fraud rows (260,582 minus 250,000 legit). We call about 3,990 rows fraud, so at
+most 38% of fraud rows are reachable for us. With every one of them found and typed right the score is about
+0.58. The top four are above that: they find several hundred to a thousand ordinary-looking fraud rows, with the
+right class.
+
+Checked since the last entry, all empty:
+
+- file chunk against 181 row attributes, train and test (a sharding rule would expose fraud rows): nothing;
+- how October's known hidden rows connect (receiver and sender activity, money moving on, reverse pairs)
+  against known legit rows, with September as reference: the same;
+- a type model given every raw column, every id and all account / merchant attributes: type accuracy 0.879,
+  the same as the blend (0.905 even when rows of one episode leak across folds);
+- pairs of same-class hidden rows sharing an exact key (28 keys: same second, sender, receiver, amount, balance,
+  SIM age, IP score, city and minute, id prefix...): 0.96 to 1.05 times chance on every key with enough pairs;
+- October against September rows that look legit (model told apart only by general drift in amounts and IP
+  score, AUC 0.636): no extra population in October (0.2% above September's 99.9% level);
+- test.csv against train.csv: same columns, formats, categories, id ranges; every sender, receiver and merchant
+  exists in the side tables; the only test-only values are app versions 5.0 to 5.2, on every row.
+
+In train the ordinary-looking fraud rows are independent draws from the legit generator. Nothing in the four
+files, as far as these checks go, marks them in test either, apart from the phone counter.
