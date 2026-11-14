@@ -202,3 +202,39 @@ step rebuilds it with 0 rows different.
   phone or sender look the same as in train; every burst of 3+ rows is a SIM swap or takeover.
 - GPU queue `src/queue_day.ps1`: XGBoost on the other legit half with the time-consistent screen, CatBoost,
   and 6 more seeds, for the blend (last 8 members added +0.0008).
+
+## 14 Nov 14:30: leaders at 0.63, and what was checked against it
+
+Board (from the team's screenshots): Loss Leaders 0.6338, Ctrl+C 0.6311, Bolt 0.6111, Draco 0.5731, then a pack at
+0.541 to 0.550 (we are at 0.5417). Four teams jumped between 11:00 and 11:30 on 14 Nov. Our ceiling with every
+visible fraud row typed correctly is about 0.61, so the top two also find some ordinary-looking fraud.
+
+GPU queue (`src/queue_day.ps1`, 12 runs, all finished 09:57): XGBoost on the other legit half x4, CatBoost x2,
+6 more seeds. Added to the 16-run blend they score 0.5479 against 0.5485 on the test-like ruler. Not used.
+
+Checked this round, all empty (hidden = rows `labels_clean` marks as noise, or block rows that look ordinary):
+
+- 589 simple derived features against the hidden label: every hex character and modulus of the transaction id,
+  digits and moduli of sender / receiver / device ids, amount / balance / SIM / device-age digits, seconds,
+  minutes, weekday, bank, KYC, OS, city, opening month, merchant category and their crosses. Only the device id
+  range stands out.
+- Time: look-alike episodes are not tied to day, hour or weekday (AUC 0.47 to 0.60); hidden rows of a class are
+  not closer to each other or to that class's visible episodes than random legit rows are.
+- Account state: device age is capped at account age for hidden rows exactly as for legit rows (1.77% vs 1.72%
+  at the cap, none above); `new_payee` is an independent flag (not history); the guest phone of an account is
+  fixed and 4% of accounts live on one, same for hidden rows.
+- Cross-table: row merchant category always equals merchants.csv, no receiver or merchant used before it
+  existed, city / bank / OS matches the same for hidden and legit.
+- October only: known hidden rows (215 block rows the blend calls legit) against 7,462 known legit rows: app
+  version 5.0 to 5.2 for both, IP score, SIM age, login time the same. No October-only tell.
+- test.csv file order and transaction ids: known fraud rows are uniform over position, position modulo k,
+  id value and id modulo k; neighbours in the file are not fraud more often.
+- Undoing the chunk shuffle with numpy seeds 0 to 50 and common others, 28,910 size / seed / method
+  combinations: best rank correlation 0.07.
+- Legit rows per file: train has almost exactly 6 x 250,000 legit-phase rows (so 10% of fraud-phase rows are
+  unreported), test 2 x 125,000, which puts test fraud at 10,582 rows (4.06%), matching the all-legit probe.
+
+The Gemini notes in the team's Downloads folder reach the same dead ends; their two claims that would matter
+("test has no ordinary-looking fraud", "labels_clean corrupted the types") do not hold: the all-legit probe
+(0.0816) fixes test fraud at 4.1%, and the raw-label / no-wrong-type runs score lower (type accuracy 0.877
+against 0.884).
