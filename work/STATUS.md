@@ -4,7 +4,9 @@ Edit your own row when you start or finish something, then commit and push right
 
 Last updated: 14 Nov 09:00 by L2.
 
-## L2, 14 Nov 09:00: zones file scored 0.5403 (best; board top 0.5555)
+## L2, 14 Nov 09:30: best is now 0.5417 (`submissions/1114-0854__L2_blend16_zones3.csv`); `reproduce.sh` targets it. 6 of 10 uploads used.
+
+## L2, 14 Nov 09:00: zones file scored 0.5403 (board top 0.5555)
 
 - `submissions/1114-0359__L2_blend8_zones2.csv` = **0.5403**. `reproduce.sh` now rebuilds this file (zone step checked: 0 rows differ).
 - Test labels are clean (statement, point 2): judge on the test-like ruler that `src.zone_apply` prints (Sep, unreported rows counted as fraud). 0.5403 on the board = 0.5475 there.

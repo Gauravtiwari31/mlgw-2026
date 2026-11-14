@@ -184,3 +184,21 @@ geometric law), not tied to the number of rows on neighbouring phones. Likely on
 `submissions/1114-0854__L2_blend16_zones3.csv`: 16-run blend (the 8 + 8 time-consistent XGBoost seeds) + zones +
 rules R1 to R4. Sep test-like 0.5491 against 0.5475; 38 test rows differ from the 0.5403 file. Expected public
 0.540 to 0.544: the change is smaller than the public sample's noise.
+
+## 14 Nov 09:30: 0.5417, and two more checks
+
+`1114-0854__L2_blend16_zones3.csv` scored **0.5417** (+0.0014, as estimated). `reproduce.sh` targets it; the zone
+step rebuilds it with 0 rows different.
+
+- **No October drift on block rows.** For every zone the blend reads known block rows the same way in train and
+  in October (share called legit / right type / other type). Example, sim_swap zone: 16 / 9 / 75% in train,
+  14 / 10 / 76% in October. So October's own block phones give nothing to correct. The share of look-alike
+  episodes is also the same (mule-looking rows in the velocity zone 7% in train, 5% in October).
+- **Look-alikes are near copies, not exact copies.** Phones with several rows in the sim_swap zone all look like
+  takeovers (fresh SIM 1%), but every one is away from home (takeover zone 91%) and PIN retries are 0.92
+  against 0.83. Too small to separate rows off the block: the type-only model stays at 86%.
+- **Velocity bots did not move in October.** Pool-phone rows per month: 1307, 968, 1066, then 269 in October
+  (7 phones against 25 to 32, about 14 expected at half size). Off the pool, fast logins (1.6%) and bursts by
+  phone or sender look the same as in train; every burst of 3+ rows is a SIM swap or takeover.
+- GPU queue `src/queue_day.ps1`: XGBoost on the other legit half with the time-consistent screen, CatBoost,
+  and 6 more seeds, for the blend (last 8 members added +0.0008).

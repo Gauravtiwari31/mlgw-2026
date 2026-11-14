@@ -5,7 +5,7 @@
 
 Steps (each a separate process, run in order; nothing runs in parallel):
   folds -> base_v1 -> labels_clean (from the committed change list) -> flow/behaviour features in fw_s0 and
-  fw_s1 -> 4 LightGBM + 4 XGBoost -> blend -> phone-id zones (src.device_block) -> zones and linked rows
+  fw_s1 -> 4 LightGBM + 12 XGBoost (4 plain, 8 with the time-consistent feature screen) -> blend -> phone-id zones (src.device_block) -> zones and linked rows
   applied to the blend (src.zone_apply) -> compare with submissions/<TARGET>.
 Data: the five CSV files in the repo root or data/. Writes reproduce_report.md.
 """
@@ -21,14 +21,15 @@ from pathlib import Path
 import polars as pl
 
 ROOT = Path(__file__).resolve().parents[1]
-TARGET = "1114-0359__L2_blend8_zones2.csv"           # best public upload, 0.5403
-NAME = "REPRO_blend8_beh3"                           # the blend underneath (0.5019 on its own)
-ZONE_NAME = "REPRO_blend8_zones2"
-ZONE_RULES = "R1,R2"                                 # link rules the uploaded file used
+TARGET = "1114-0854__L2_blend16_zones3.csv"          # best public upload, 0.5417
+NAME = "REPRO_blend16_tc"                            # the blend underneath
+ZONE_NAME = "REPRO_blend16_zones3"
+ZONE_RULES = "R1,R2,R3,R4"                           # link rules the uploaded file used
 RUNS = ["L2_lgbm_fw-clean_b1-f1-beh12_s0", "L2_lgbm_fw-clean_b1-f1-beh12_s1", "L2_lgbm_fw-clean_b1-f1-beh12_s2",
         "L2_lgbm_fw1-clean_b1-f1-beh12_s3"]
 XGB = [("configs/L2_lgbm_fw-clean_b1-f1-beh12_s0.yaml", "L2_xgb_fw-clean_b1-f1-beh12_s0", 0),
-       *[("configs/L2_lgbm_fw-clean_b1-f1-beh123-lh2_s0.yaml", f"L2_xgb_fw-clean_b1-f1-beh123-lh2_s{s}", s) for s in (0, 1, 2)]]
+       *[("configs/L2_lgbm_fw-clean_b1-f1-beh123-lh2_s0.yaml", f"L2_xgb_fw-clean_b1-f1-beh123-lh2_s{s}", s) for s in (0, 1, 2)],
+       *[("configs/L2_lgbm_fw-clean_b1-f1-beh123-lh2_tc_s0.yaml", f"L2_xgb_fw-clean_b1-f1-beh123-lh2_tc_s{s}", s) for s in (0, 1, 3, 4, 5, 6, 7, 8)]]
 STEPS = [
     ["-m", "src.folds"],
     ["-m", "src.base_features"],
