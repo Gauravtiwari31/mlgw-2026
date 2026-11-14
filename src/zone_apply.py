@@ -13,29 +13,47 @@ import numpy as np
 import polars as pl
 
 from . import metric
-from .common import CACHE, LABEL_TO_ID, LABELS, N_CLASSES, OOF, load_folds, load_raw
+from .common import CACHE, LABEL_TO_ID, LABELS, N_CLASSES, OOF, ROOT, load_folds, load_raw
 from .postprocess import write_submission
 
 
 FANIN = ["mule_account", "velocity_bot", "layering_chain"]
 TAKEOVER = ["sim_swap", "account_takeover"]
+COLLECT = ["phishing_collect", "fake_cashback"]
 
 
-def propagate(rows: pl.DataFrame) -> pl.DataFrame:
+def propagate(rows: pl.DataFrame, use: tuple[str, ...] = ("R1", "R2", "R3", "R4")) -> pl.DataFrame:
     """rows: txn_id, t (epoch s), sender_id, receiver_id, is_p2p, pred (class name), zone (null off the block).
-    Returns txn_id, prop for off-block rows whose class is settled by a block row of the same episode:
-      R1  same personal receiver within 24 h, both the row's prediction and the zone among mule / velocity / layering
-      R2  same sender within 2 h, both among sim_swap / account_takeover
-    (train check, audit/device_blocks.md: zone right in 98% and 100% of disagreements; other links are not used)."""
+    Returns txn_id, prop for off-block rows whose class is settled by a block row of the same episode.
+    A rule fires only when the row's prediction and the block row's zone are in the same look-alike group:
+      R1  same personal receiver within 24 h                          mule / velocity / layering
+      R2  same sender within 2 h                                      sim_swap / account_takeover
+      R3  the reverse payment of the pair within 24 h                 phishing / cashback
+      R4  the row pays the block row's sender within 2 h, or is paid
+          on by the block row's receiver within 24 h (money moving on) mule / velocity / layering
+    Train check (audit/device_blocks.md): where rule and blend disagree the rule is right in 98% (R1 to
+    velocity), 100% (R2, R3) and 13 of 14 (R4). Wider windows and other links are worse than the blend."""
     blk = rows.filter(pl.col("zone").is_not_null())
     rest = rows.filter(pl.col("zone").is_null())
+    p2p = pl.col("is_p2p")
+    rules = [  # (rule, row keys, block keys, window s, group, zones allowed, P2P only)
+        ("R1", ["receiver_id"], ["receiver_id"], 86400, FANIN, FANIN, True),
+        ("R2", ["sender_id"], ["sender_id"], 7200, TAKEOVER, TAKEOVER, False),
+        ("R3", ["sender_id", "receiver_id"], ["receiver_id", "sender_id"], 86400, COLLECT, COLLECT, True),
+        ("R4", ["receiver_id"], ["sender_id"], 7200, FANIN, ["mule_account", "layering_chain"], True),
+        ("R4", ["sender_id"], ["receiver_id"], 86400, FANIN, FANIN, True),
+    ]
     out = []
-    for key, win, group, cond in (("receiver_id", 86400, FANIN, pl.col("is_p2p")), ("sender_id", 7200, TAKEOVER, pl.lit(True))):
-        r = rest.filter(cond & pl.col("pred").is_in(group)).select("txn_id", key, "t", "pred")
-        b = blk.filter(cond & pl.col("zone").is_in(group)).select(key, bt="t", bz="zone")
-        j = r.join(b, on=key, how="inner").filter((pl.col("t") - pl.col("bt")).abs() <= win)
+    for rid, rk, bk, win, group, zones, only_p2p in rules:
+        if rid not in use:
+            continue
+        r = rest.filter(pl.col("pred").is_in(group) & (p2p if only_p2p else pl.lit(True)))
+        b = blk.filter(pl.col("zone").is_in(zones) & (p2p if only_p2p else pl.lit(True)))
+        r = r.select("txn_id", "t", *[pl.col(c).alias(f"k{i}") for i, c in enumerate(rk)])
+        b = b.select(*[pl.col(c).alias(f"k{i}") for i, c in enumerate(bk)], bt="t", bz="zone")
+        j = r.join(b, on=[f"k{i}" for i in range(len(rk))], how="inner").filter((pl.col("t") - pl.col("bt")).abs() <= win)
         out.append(j.group_by("txn_id").agg(prop=pl.col("bz").mode().first()))
-    return pl.concat(out).unique(subset="txn_id", keep="first")
+    return pl.concat(out).unique(subset="txn_id", keep="first", maintain_order=True)
 
 
 def main() -> None:
@@ -43,8 +61,10 @@ def main() -> None:
     ap.add_argument("--base", required=True)
     ap.add_argument("--runs", nargs="+", required=True)
     ap.add_argument("--name", default="zone")
-    ap.add_argument("--propagate", action="store_true", help="also settle linked episode rows (rules R1, R2)")
+    ap.add_argument("--propagate", action="store_true", help="also settle linked episode rows (rules R1 to R4)")
+    ap.add_argument("--rules", default="R1,R2,R3,R4", help="which link rules to use with --propagate (the 0.5403 file used R1,R2)")
     args = ap.parse_args()
+    use = tuple(args.rules.split(","))
     pl.Config.set_tbl_rows(40); pl.Config.set_tbl_width_chars(200)
     z = pl.read_parquet(CACHE / "device_zone.parquet")
     full = load_raw()
@@ -60,9 +80,15 @@ def main() -> None:
         z.filter(pl.col("split") == "train").select("txn_id", "zone"), on="txn_id", how="left", maintain_order="left")
     if args.propagate:
         pr = propagate(o.join(link, on="txn_id", how="left", maintain_order="left").with_columns(
-            pred=pl.col("pred").replace_strict(dict(enumerate(LABELS)), return_dtype=pl.String)))
+            pred=pl.col("pred").replace_strict(dict(enumerate(LABELS)), return_dtype=pl.String)), use)
         o = o.join(pr, on="txn_id", how="left", maintain_order="left").with_columns(zone=pl.coalesce("zone", "prop")).drop("prop")
         print(f"propagation (train): {pr.height} off-block rows settled by a linked block row")
+    # test labels are clean (PROBLEM_STATEMENT): no unreported rows. Test-like ruler = raw labels, with the rows
+    # labels_clean flags as unreported counted as fraud (type: zone if on the block, else the blend's own type).
+    st = o.select("txn_id").join(pl.read_parquet(ROOT / "labels_clean.parquet").select("txn_id", "status"), on="txn_id", how="left",
+                                 maintain_order="left")["status"].is_in(["unreported", "unreported_typed"]).fill_null(False).to_numpy()
+    blend_type = 1 + P[:, 1:].argmax(1)
+    o = o.with_columns(unrep=pl.Series(st), btype=pl.Series(blend_type.astype(np.int32)))
     for m, name in ((2, "Sep"), (None, "Jul-Sep")):
         s = o if m is None else o.filter(pl.col("month_fold") == m)
         y = s["label"].replace_strict(LABEL_TO_ID, return_dtype=pl.Int32).to_numpy()
@@ -73,7 +99,9 @@ def main() -> None:
         y_clean = np.where((zid >= 0) & (y == 0), zid, y)
         f0, f1 = metric.f1_per_class(y, p0), metric.f1_per_class(y, p1)
         g0, g1 = metric.f1_per_class(y_clean, p0), metric.f1_per_class(y_clean, p1)
-        print(f"{name}: rows on block phones {int((zid >= 0).sum())}, predictions changed {int((p0 != p1).sum())}")
+        y_like = np.where(s["unrep"].to_numpy() & (y == 0), np.where(zid >= 0, zid, s["btype"].to_numpy()), y)
+        print(f"{name}: rows on block phones or linked {int((zid >= 0).sum())}, predictions changed {int((p0 != p1).sum())}")
+        print(f"  macro-F1 test-like (unreported rows counted as fraud): {metric.macro_f1(y_like, p0):.4f} -> {metric.macro_f1(y_like, p1):.4f}")
         print(f"  macro-F1 vs raw labels: {f0.mean():.4f} -> {f1.mean():.4f} ({f1.mean() - f0.mean():+.4f})"
               f"   | counting unreported block rows as fraud: {g0.mean():.4f} -> {g1.mean():.4f} ({g1.mean() - g0.mean():+.4f})")
         if m == 2:
@@ -85,7 +113,7 @@ def main() -> None:
     zt = z.filter(pl.col("split") == "test").select(id="txn_id", zone="zone")
     sub = base.join(zt, on="id", how="left", maintain_order="left")
     if args.propagate:
-        pr = propagate(sub.rename({"id": "txn_id", "label": "pred"}).join(link, on="txn_id", how="left", maintain_order="left")).rename({"txn_id": "id"})
+        pr = propagate(sub.rename({"id": "txn_id", "label": "pred"}).join(link, on="txn_id", how="left", maintain_order="left"), use).rename({"txn_id": "id"})
         sub = sub.join(pr, on="id", how="left", maintain_order="left").with_columns(zone=pl.coalesce("zone", "prop")).drop("prop")
         print(f"propagation (test): {pr.height} off-block rows settled by a linked block row")
     ch = sub.filter(pl.col("zone").is_not_null() & (pl.col("zone") != pl.col("label")))

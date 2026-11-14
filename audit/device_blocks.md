@@ -133,3 +133,54 @@ fall in the public 30%, so the public number can land 0.006 either side.
   19 velocity-labelled fan-in episodes against 185 mule ones: no episode statistic separates them (best AUC
   0.65 on 19 cases). Only a block phone inside the episode tells.
 - Larger blends (up to 31 runs): +0.0003 to +0.0009 on Sep. The base model is saturated.
+
+## Result on the board and what it told us (14 Nov 09:00)
+
+`1114-0359__L2_blend8_zones2.csv` scored **0.5403** (was 0.5019; +0.038 against an estimate of +0.027).
+The statement says the test labels are clean: no unreported rows. In test every block row carries a fraud label
+(88% in train), which is the difference. The statement also says "some fraud looks completely ordinary, and some
+fraud types look like each other": both are how the data is made, not label noise, and both are in test.
+
+**Test-like ruler.** September out-of-fold, raw labels, with the rows `labels_clean` flags as unreported counted
+as fraud. `src/zone_apply.py` prints it. The 0.5403 file's method scores 0.5475 on it; the 0.5019 file's 0.5207.
+
+**Where the rest of the score is** (same ruler, Sep):
+
+| | Sep |
+|---|---|
+| blend + zones + linked rows (0.5403 on the board) | 0.5475 |
+| + every visible fraud row we call fraud gets its true type (753 rows) | 0.6048 |
+| + visible fraud called legit is found (96 rows) | 0.6094 |
+| + no legit row called fraud (122 rows) | 0.6116 |
+
+So wrong fraud type is worth 0.057, everything else under 0.01. The wrong types are whole episodes made in one
+class's loop with another class's pattern (velocity as mule fan-in 125, mule as chain 98, takeover as SIM swap 92,
+cashback / phishing 129 in Sep). Checked again this round:
+
+- a model trained only on visible fraud rows to tell types: 86.2% type accuracy against the blend's 86.8%;
+- class weights fitted on the test-like ruler with a month held out: +0.0003, 0, -0.0007;
+- a lower cut-off for calling fraud: +0.0003 at best;
+- link rules, full grid of link type x time window x class group: two more rules are right where they disagree
+  with the blend. R3: the reverse payment of a pair within 24 h (phishing / cashback, 17 of 17). R4: money
+  moving on from or to a block row (mule / layering, 13 of 14). Receiver links for sim_swap / takeover are wrong
+  (22% right): fraud rings share receiving accounts across classes. All rules together: Sep 0.5475 -> 0.5483.
+
+**Ordinary-looking fraud cannot be found.** Block phones give 878 known ordinary-looking fraud rows, ordinary
+new phones give 45,177 known legit rows. A model on every raw column plus digit patterns (decimals, seconds,
+id values) separates them with AUC 0.505. They are made by the same function; the phone counter is the only
+difference. Also no grouping: the next row of the same sender, receiver or phone after such a row is another
+one 2.2 to 2.5% of the time, the base rate.
+
+**Row order of the CSV files.** Not a full shuffle: train.csv is 6 chunks of about 260,700 rows and test.csv
+2 chunks of about 130,300, each a consecutive slice of the legit generation order (ordinary phone ids are
+sorted by chunk, rank correlation 0.97 / 0.75 with file position) shuffled inside. Fraud rows are spread evenly
+over chunks, with no relation between chunk and zone, class or id. Nothing to use.
+
+**Unused ids inside the block** (59%): spread like independent coin flips inside each zone (run lengths match a
+geometric law), not tied to the number of rows on neighbouring phones. Likely one id reserved per episode.
+
+## Candidate for the next upload
+
+`submissions/1114-0854__L2_blend16_zones3.csv`: 16-run blend (the 8 + 8 time-consistent XGBoost seeds) + zones +
+rules R1 to R4. Sep test-like 0.5491 against 0.5475; 38 test rows differ from the 0.5403 file. Expected public
+0.540 to 0.544: the change is smaller than the public sample's noise.

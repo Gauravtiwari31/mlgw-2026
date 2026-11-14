@@ -5,7 +5,8 @@
 
 Steps (each a separate process, run in order; nothing runs in parallel):
   folds -> base_v1 -> labels_clean (from the committed change list) -> flow/behaviour features in fw_s0 and
-  fw_s1 -> 4 LightGBM + 1 XGBoost -> blend -> compare with submissions/<TARGET>.
+  fw_s1 -> 4 LightGBM + 4 XGBoost -> blend -> phone-id zones (src.device_block) -> zones and linked rows
+  applied to the blend (src.zone_apply) -> compare with submissions/<TARGET>.
 Data: the five CSV files in the repo root or data/. Writes reproduce_report.md.
 """
 from __future__ import annotations
@@ -20,8 +21,10 @@ from pathlib import Path
 import polars as pl
 
 ROOT = Path(__file__).resolve().parents[1]
-TARGET = "1113-2140__L2_blend8_beh3.csv"             # best public upload, 0.5019
-NAME = "REPRO_blend8_beh3"
+TARGET = "1114-0359__L2_blend8_zones2.csv"           # best public upload, 0.5403
+NAME = "REPRO_blend8_beh3"                           # the blend underneath (0.5019 on its own)
+ZONE_NAME = "REPRO_blend8_zones2"
+ZONE_RULES = "R1,R2"                                 # link rules the uploaded file used
 RUNS = ["L2_lgbm_fw-clean_b1-f1-beh12_s0", "L2_lgbm_fw-clean_b1-f1-beh12_s1", "L2_lgbm_fw-clean_b1-f1-beh12_s2",
         "L2_lgbm_fw1-clean_b1-f1-beh12_s3"]
 XGB = [("configs/L2_lgbm_fw-clean_b1-f1-beh12_s0.yaml", "L2_xgb_fw-clean_b1-f1-beh12_s0", 0),
@@ -36,11 +39,18 @@ STEPS = [
     *[["-m", "src.train", "--config", f"configs/{r}.yaml"] for r in RUNS],
     *[["-m", "src.train_xgb", "--config", c, "--run-id", r, "--seed", str(s)] for c, r, s in XGB],
     ["-m", "src.blend", "--name", NAME, "--runs", *RUNS, *[r for _, r, _ in XGB]],
+    ["-m", "src.device_block", "--runs", *RUNS, *[r for _, r, _ in XGB]],
+    ["-m", "src.zone_apply", "--propagate", "--rules", ZONE_RULES, "--name", ZONE_NAME, "--base", "{BLEND}", "--runs", *RUNS, *[r for _, r, _ in XGB]],
 ]
 
 
+def newest(name: str) -> str:
+    found = sorted(glob.glob(str(ROOT / "submissions" / f"*{name}.csv")))
+    return found[-1] if found else ""
+
+
 def compare() -> str:
-    new = sorted(glob.glob(str(ROOT / "submissions" / f"*{NAME}.csv")))
+    new = sorted(glob.glob(str(ROOT / "submissions" / f"*{ZONE_NAME}.csv")))
     if not new:
         return "no reproduced file found"
     a, b = pl.read_csv(new[-1]), pl.read_csv(ROOT / "submissions" / TARGET)
@@ -62,6 +72,7 @@ def main() -> None:
     if not args.compare_only:
         for step in STEPS:
             t0 = time.time()
+            step = [newest(NAME) if a == "{BLEND}" else a for a in step]
             r = subprocess.run([sys.executable, *step], cwd=ROOT, capture_output=True, text=True)
             status = "ok" if r.returncode == 0 else f"FAILED ({r.returncode})"
             log.append(f"- `{' '.join(step[1:])}`: {status}, {time.time() - t0:.0f} s")
@@ -71,6 +82,8 @@ def main() -> None:
                 break
     result = compare()
     print(result)
+    if args.compare_only:
+        return
     (ROOT / "reproduce_report.md").write_text("# Reproduce report\n\n## Steps\n\n" + "\n".join(log) + "\n\n## Comparison\n\n```\n" + result + "\n```\n", encoding="utf-8")
 
 

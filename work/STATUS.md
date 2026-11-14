@@ -2,7 +2,15 @@
 
 Edit your own row when you start or finish something, then commit and push right away. Pull before you start a new task, so two machines never build the same thing.
 
-Last updated: 14 Nov 04:00 by L2.
+Last updated: 14 Nov 09:00 by L2.
+
+## L2, 14 Nov 09:00: zones file scored 0.5403 (best; board top 0.5555)
+
+- `submissions/1114-0359__L2_blend8_zones2.csv` = **0.5403**. `reproduce.sh` now rebuilds this file (zone step checked: 0 rows differ).
+- Test labels are clean (statement, point 2): judge on the test-like ruler that `src.zone_apply` prints (Sep, unreported rows counted as fraud). 0.5403 on the board = 0.5475 there.
+- What is left is fraud TYPE on rows we already call fraud (0.057 on that ruler). Those are look-alike episodes; only a block phone in the episode tells. Details and the list of things that do not work: `audit/device_blocks.md`.
+- Next candidate: `submissions/1114-0854__L2_blend16_zones3.csv` (expected 0.540 to 0.544, a coin flip against 0.5403).
+- 14 Nov uploads used: 5 of 10.
 
 ## L2, 14 Nov 04:00: phone ids give away fraud rows and their class (`audit/device_blocks.md`)
 
