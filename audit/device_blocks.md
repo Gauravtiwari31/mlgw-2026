@@ -334,5 +334,11 @@ A fixed shuffle seed would give the order back: for chunk 0 of train (n = 260,73
 20,000 plus 51 common ones was tried with numpy's legacy and PCG64 permutations, in both directions, and checked
 against the generation order of the 7,411 legit new-phone rows: no seed fits (24 minutes on 11 processes).
 
+**Links at any distance in time.** Fraud receivers are reused across weeks, but not by one class loop: for
+receivers of sim_swap / takeover rows spread over more than two days the main class covers 75% of the rows
+(88% for fan-ins, 86% for collect, 91% for merchants). Setting a row to the zone of a block-phone row with the
+same receiver or sender at any time is wrong far more often than the blend where the two disagree (receiver,
+takeover group: rule right 49, blend right 157; sender, fan-in group: 1 against 267). The 24 h / 2 h rules stay.
+
 No organiser hint was found: no e-mail after 13 Nov, nothing on the public event page; the team workspace
 needs a login this session does not have.
