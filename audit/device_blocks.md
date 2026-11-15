@@ -295,7 +295,9 @@ September). Ordinary-looking fraud is a fixed stream per class and month (hidden
 1,723 / 1,798 / 1,757), while visible rows come in episodes. October has 7 bot-phone bursts (269 rows) where the
 train rate gives 13 to 14, and 5 collusion merchants (85 rows) against 6 to 7. With 269 visible rows out of about
 1,240 velocity rows the best possible F1 is 0.36, which is what the probe showed. It is not a miss of ours:
-- no bursts off the bot pool in October (receiver sessions with a 10-minute gap, P2P and merchant);
+- no bursts off the bot pool in any month: a detector for 10+ small payments into one merchant within 15 minutes
+  (far above the merchant's own rate) finds 730 / 476 / 637 / 154 window starts per month with the bot-pool rows
+  in, and 0 with them out; the same for 6+ payments by one account;
 - share of rows with login-to-payment under 2 to 15 s off the pool is the same in every month;
 - mule-typed fan-in episodes in October have the same size, amounts, login times and hours as in train.
 
