@@ -8,7 +8,7 @@ Last updated: 15 Nov 05:30 by L2.
 
 - Best public upload is still `submissions/1114-0854__L2_blend16_zones3.csv` = **0.5417** (rank 17 at midnight; top 0.6338).
   Nothing built since beats it: weights 0.5411, pairwise type flips 0.5407, density / surgical flips 0.5320.
-- `reproduce.sh` rebuilds that file. A fresh-clone run was started 15 Nov 05:17 in `E:\mlgw_repro2`; result goes to `reproduce_report.md`.
+- `reproduce.sh` rebuilds that file. Fresh-clone run 15 Nov 05:17-06:33: every step ok, **2 of 260,582 rows differ** (GPU run-to-run variation). See `reproduce_report.md`.
 - Last round of checks (all empty) is written up at the end of `audit/device_blocks.md`.
 - **To do before 10:00:** submit the repository link and the approach note from the Submission tab.
 

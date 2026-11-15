@@ -1,20 +1,22 @@
 # Reproduce report
 
-Fresh clone of `main` at `3be9b34` in `E:\mlgw_repro`, data files copied in, `python -m src.reproduce`,
-13 Nov 2026 22:00-22:32 IST, RTX 4060 laptop (L2).
+Fresh clone of `main` at `cbe14f4` in `E:\mlgw_repro2`, the five data files copied in, `python -m src.reproduce`,
+15 Nov 2026 05:17-06:33 IST, RTX 4060 laptop (L2).
 
-Target: `submissions/1113-1912__L2_lgbm4-xgb1_blend5.csv` (public 0.5014, best at the time).
+Target: `submissions/1114-0854__L2_blend16_zones3.csv` (public 0.5417, the team's best upload).
 
 | Step | Result |
 |---|---|
-| folds, base_v1, labels_clean --from-changes | ok (8 s) |
-| flow / behaviour / behaviour2 in fw_s0 and fw_s1 | ok (3.5 min) |
-| 4 LightGBM | ok (13.5 min) |
-| XGBoost (GPU) | ok (3.2 min) |
-| blend | ok |
+| folds, base_v1, labels_clean --from-changes | ok (15 s) |
+| flow / behaviour / behaviour2 in fw_s0 and fw_s1, behaviour3, label history | ok (6.7 min) |
+| 4 LightGBM | ok (25 min; the first run shared the CPU with another job, the others took about 3 min each) |
+| 12 XGBoost on the GPU (4 plain, 8 with the time-consistent feature screen) | ok (44 min) |
+| blend of the 16 runs | ok (6 s) |
+| phone-id zones (`src.device_block`) | ok (10 s) |
+| zones and linked rows applied (`src.zone_apply`, rules R1 to R4) | ok (3 s) |
 
-**Result: 3 of 260,582 rows differ** (phishing -> cashback 1, takeover -> layering 1, sim_swap -> takeover 1).
-That is GPU XGBoost run-to-run variation; every step is otherwise deterministic.
+**Result: 2 of 260,582 rows differ** from the uploaded file (qr_swap -> refund_abuse 1, velocity_bot -> mule_account 1).
+That is GPU XGBoost run-to-run variation; every other step is deterministic.
 
-`src/reproduce.py` now targets the newer best, `1113-2140__L2_blend8_beh3.csv` (public 0.5019), and adds the
-behaviour_v3 and clean label-history builds and the three extra XGBoost seeds.
+Run it yourself: `bash reproduce.sh` (Python 3.11, `pip install -r requirements.txt`, an NVIDIA GPU, the five
+competition CSV files in the repo root or `data/`). About 75 minutes on this laptop.
