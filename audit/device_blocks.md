@@ -310,6 +310,9 @@ train rate gives 13 to 14, and 5 collusion merchants (85 rows) against 6 to 7. W
   70.8 over 92 days) all equal to legit;
 - models (44 raw, id and side-table features, 4-fold): hidden against legit AUC 0.4996 overall and 0.49 to 0.51
   for every class; class among hidden rows: accuracy 0.188 against 0.193 for always guessing the biggest class;
+- low-level features a tree on raw values cannot see (131 of them: the 32 bits, hex digits and residues of the
+  transaction id, residues of sender, receiver and file position, last digits, lengths and decimal counts of
+  every value as written in the CSV, second and minute): hidden against legit AUC 0.4995;
 - October only: ordinary-looking rows on block phones against legit new-phone rows: same app versions (5.0 to
   5.2 on every test row), apps, types, amounts, ages; block rows sit slightly later in the month (rank test
   p = 0.001, 186 rows), with no trend in train and nothing to act on;
