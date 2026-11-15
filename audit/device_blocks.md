@@ -327,6 +327,9 @@ class loops do not run in date order and the date says nothing about a boundary.
 (sizes 260,742 / 260,631 / 260,481 / 260,696 / 260,870 / 260,640), shuffled; test is 2 x 125,000 legit plus
 10,582 fraud rows. Train has 64,060 fraud rows, 57,648 of them labelled: exactly 10.0% unreported. No column
 differs between chunks (KS at noise level for 19 columns) and none follows generation order inside a chunk.
+A fixed shuffle seed would give the order back: for chunk 0 of train (n = 260,731 to 260,753) every seed from 0 to
+20,000 plus 51 common ones was tried with numpy's legacy and PCG64 permutations, in both directions, and checked
+against the generation order of the 7,411 legit new-phone rows: no seed fits (24 minutes on 11 processes).
 
 No organiser hint was found: no e-mail after 13 Nov, nothing on the public event page; the team workspace
 needs a login this session does not have.
